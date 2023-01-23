@@ -2219,10 +2219,10 @@ var UnityLoader = UnityLoader || {
                 preRun: [],
                 postRun: [],
                 print: function(e) {
-                    console.log(e)
+                    //console.log(e)
                 },
                 printErr: function(e) {
-                    console.error(e)
+                    //console.error(e)
                 },
                 Jobs: {},
                 buildDownloadProgress: {},
@@ -2259,7 +2259,7 @@ var UnityLoader = UnityLoader || {
             e || abort("Assertion failed: " + t)
         },
         optimizeMathFround: function(e, t) {
-            console.log("optimizing out Math.fround calls");
+            //console.log("optimizing out Math.fround calls");
             for (var r = {
                     LOOKING_FOR_MODULE: 0,
                     SCANNING_MODULE_VARIABLES: 1,
@@ -2284,7 +2284,7 @@ var UnityLoader = UnityLoader || {
     },
     UnityCache: function() {
         function e(e) {
-            console.log("[UnityCache] " + e)
+            //console.log("[UnityCache] " + e)
         }
 
         function t(e) {

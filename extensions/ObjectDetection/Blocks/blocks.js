@@ -195,7 +195,7 @@ postMessage({ command : "MOVE", lin : 0, ang : 0 });
       "duration",
       Blockly.JavaScript.ORDER_ATOMIC
     );
-    var code = `postMessage({ command : "MOVE", lin : -${value_speed}, ang : 0 });
+    var code = `postMessage({ command : "MOVE", lin : ${value_speed}, ang : 0 });
 await new Promise(r => setTimeout(r,${value_duration}));
 postMessage({ command : "MOVE", lin : 0, ang : 0 });
 `;
@@ -229,7 +229,7 @@ postMessage({ command : "MOVE", lin : 0, ang : 0 });
       "duration",
       Blockly.JavaScript.ORDER_ATOMIC
     );
-    var code = `postMessage({ command : "MOVE", lin : 0, ang : -${value_speed} });
+    var code = `postMessage({ command : "MOVE", lin : 0, ang : ${value_speed} });
 await new Promise(r => setTimeout(r,${value_duration}));
 postMessage({ command : "MOVE", lin : 0, ang : 0 });
 `;
@@ -263,7 +263,7 @@ postMessage({ command : "MOVE", lin : 0, ang : 0 });
       "duration",
       Blockly.JavaScript.ORDER_ATOMIC
     );
-    var code = `postMessage({ command : "MOVE", lin : 0, ang : ${value_speed} });
+    var code = `postMessage({ command : "MOVE", lin : 0, ang : -${value_speed} });
 await new Promise(r => setTimeout(r,${value_duration}));
 postMessage({ command : "MOVE", lin : 0, ang : 0 });
 `;

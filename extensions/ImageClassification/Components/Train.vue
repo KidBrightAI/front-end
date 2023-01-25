@@ -119,6 +119,9 @@ export default {
           onDownloadProgress : (pg)=>{
             this.downloadProgress = Math.round((pg.loaded * 100) / pg.total);
           },
+          headers: {
+            'ngrok-skip-browser-warning': 'skip-it-pleaseeeeeee'
+          }
         });
         this.downloadProgress = 100;
         if (tempFile.status == 200) {
@@ -142,7 +145,11 @@ export default {
     downloadTfjs: async function (projectId) {
       this.downloadIndex += 1;
       let tfjsModelBasePath = `${this.url}/projects/${projectId}/output/tfjs`;
-      let modelJson = await axios.get(`${tfjsModelBasePath}/model.json`);
+      let modelJson = await axios.get(`${tfjsModelBasePath}/model.json`,{
+        headers: {
+          'ngrok-skip-browser-warning': 'skip-it-pleaseeeeeee'
+        }
+      });
       if (
         modelJson.status == 200 &&
         modelJson.data.weightsManifest &&

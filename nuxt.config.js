@@ -24,7 +24,7 @@ export default {
       },
     ],
     script: [
-      { src: "js/WebAudioRecorder.js", type: "text/javascript" },
+      { src: "/js/WebAudioRecorder.js", type: "text/javascript" },
       {
         src: "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js",
         type: "text/javascript",

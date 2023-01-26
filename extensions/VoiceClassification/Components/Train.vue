@@ -108,7 +108,7 @@ export default {
     ...mapActions("dataset", ["addBlobToFs", "exists"]),
     openColab: () => {
       window.open(
-        "https://colab.research.google.com/drive/11t5yJUNjLZwAb_926Izrw2NrqhWIZzZX",
+        "https://colab.research.google.com/drive/1a14kNdqn6K3EN3P7sSB9wHnjjuvMB6Lf?usp=sharing",
         "_blank"
       );
     },

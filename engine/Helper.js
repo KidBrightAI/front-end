@@ -252,7 +252,7 @@ class Helper {
   }
   concatenateArrayBuffers(buffers) {
     if (buffers.length === 1) {
-      return buffers[0];
+      return buffers[0].buffer;
     }
     var totalByteLength = 0;
     buffers.forEach(function (buffer) {

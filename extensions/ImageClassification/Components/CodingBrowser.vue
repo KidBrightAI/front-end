@@ -156,7 +156,7 @@ export default {
       this.worker.onmessage = this.processCommand.bind(this);
       
       let labels = this.project.modelLabel;
-      if(Array.isArray(labels) && !labels.length){
+      if((Array.isArray(labels) && labels.length == 0) || labels == undefined){
         labels = await this.getLabels();
       }
       //========== load tfjs model ===========//

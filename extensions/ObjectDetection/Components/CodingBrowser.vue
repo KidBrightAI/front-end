@@ -115,11 +115,12 @@ export default {
       url.host = document.location.host;
       url.protocol = document.location.protocol;
       url.port = document.location.port;
-      var modelJson = await axios.get("filesystem:"+url.href);
+      let tfjsModelJson = "filesystem:"+url.href;
+      var modelJson = await axios.get(tfjsModelJson);
       var weights = [];
-      let baseModelPath = this.project.tfjs.substring(
+      let baseModelPath = tfjsModelJson.substring(
         0,
-        this.project.tfjs.lastIndexOf("/")
+        tfjsModelJson.lastIndexOf("/")
       );
       let downloadPromises = [];
       for (let binFile of modelJson.data.weightsManifest[0].paths) {

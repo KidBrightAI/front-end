@@ -35,7 +35,7 @@ export default {
         input.connect(audioContext.destination); //get the encoding
         
         this.recorder = new WebAudioRecorder(input, {
-          workerDir: "js/",
+          workerDir: "/js/",
           encoding: "wav",
           timeLimit: 3,
           encodeAfterRecord: true,

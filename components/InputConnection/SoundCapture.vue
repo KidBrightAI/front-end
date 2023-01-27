@@ -198,7 +198,7 @@ export default {
         this.audioSource = this.audioContext.createMediaStreamSource(stream);
         //stop the input from playing back through the speakers
         this.recorder = new WebAudioRecorder(this.audioSource, {
-          workerDir: "js/",
+          workerDir: "/js/",
           encoding: "wav",
           options:{
             timeLimit: this.project.options.duration,

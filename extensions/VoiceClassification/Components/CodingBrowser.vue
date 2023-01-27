@@ -134,6 +134,7 @@ export default {
     async initModel() {
       let url = new URL(this.project.tfjs.replace("filesystem:",""));
       url.host = document.location.host;
+      url.protocol = document.location.protocol;
       var modelJson = await axios.get("filesystem:"+url.href);
       var weights = [];
       let baseModelPath = this.project.tfjs.substring(

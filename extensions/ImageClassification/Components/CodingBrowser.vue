@@ -106,7 +106,9 @@ export default {
       console.log(err);
     },
     async initModel() {
-      var modelJson = await axios.get(this.project.tfjs);
+      let url = new URL(this.project.tfjs.replace("filesystem:",""));
+      url.host = document.location.host;
+      var modelJson = await axios.get("filesystem:"+url.href);
       var weights = [];
       let baseModelPath = this.project.tfjs.substring(
         0,
@@ -127,13 +129,28 @@ export default {
         weight: weightData
       }
     },
+    async getLabels() {
+      const __label_res = await axios.get(this.project.labelFile);
+      const __labels_text = __label_res.data;
+      let labels = __labels_text
+        .replaceAll("\r", "")
+        .split("\n")
+        .map((el) => el.trim())
+        .filter((el) => el);
+      console.log(labels);
+      return labels;
+    },
     run : async function() {
       this.term.write("Running ...\r\n");
       //========== start worker ==============//
       this.worker = new runner();
       this.worker.onerror = this.onWorkerError.bind(this);
       this.worker.onmessage = this.processCommand.bind(this);
+      
       let labels = this.project.modelLabel;
+      if(Array.isArray(labels) && !labels.length){
+        labels = await this.getLabels();
+      }
       //========== load tfjs model ===========//
       this.$refs.simulator.$refs.gameInstance.contentWindow.MSG_RunProgram("1");
       var code = this.project.code;

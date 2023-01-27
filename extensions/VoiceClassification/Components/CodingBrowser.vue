@@ -159,7 +159,12 @@ export default {
       }
     },
     async getLabels() {
-      const __label_res = await axios.get(this.project.labelFile);
+      let url = new URL(this.project.labelFile.replace("filesystem:",""));
+      url.host = document.location.host;
+      url.protocol = document.location.protocol;
+      url.port = document.location.port;
+      let modelLabels = "filesystem:"+url.href;
+      const __label_res = await axios.get(modelLabels);
       const __labels_text = __label_res.data;
       let labels = __labels_text
         .replaceAll("\r", "")

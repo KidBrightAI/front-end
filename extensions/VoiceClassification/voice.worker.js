@@ -132,7 +132,7 @@ onmessage = async (event) => {
     __labels = event.data.labels;
     if (!processing) {
       processing = true;
-      await evaluateAllDataset();
+      //await evaluateAllDataset();
       process();
     }
   } else if (event.data.command == "RESPONSE") {

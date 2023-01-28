@@ -102,29 +102,29 @@ const classifyVoice = async function () {
   __image = null;
 };
 
-// const evaluateAllDataset = async function () {
-//   await initModel();
-//   let dataset = await requestData("DATASETS");
-//   let corrected = 0;
-//   let failed = 0;
-//   for (let dt of dataset.data) {
-//     let id = dt.id;
-//     let image = await requestData("MFCC", { id: id });
-//     let image_tensor = await tf.browser.fromPixels(image);
-//     let res = await __classify(image_tensor);
-//     let data = res.dataSync();
-//     let maxIndex = res.argMax(1).dataSync()[0];
-//     if (__labels[maxIndex] == dt.class) {
-//       corrected += 1;
-//     } else {
-//       failed += 1;
-//     }
-//     postMessage({
-//       command: "PRINT",
-//       msg: `Correct : ${corrected} , Failed : ${failed}\r\n`,
-//     });
-//   }
-// };
+const evaluateAllDataset = async function () {
+  await initModel();
+  let dataset = await requestData("DATASETS");
+  let corrected = 0;
+  let failed = 0;
+  for (let dt of dataset.data) {
+    let id = dt.id;
+    let image = await requestData("MFCC", { id: id });
+    let image_tensor = await tf.browser.fromPixels(image);
+    let res = await __classify(image_tensor);
+    let data = res.dataSync();
+    let maxIndex = res.argMax(1).dataSync()[0];
+    if (__labels[maxIndex] == dt.class) {
+      corrected += 1;
+    } else {
+      failed += 1;
+    }
+    postMessage({
+      command: "PRINT",
+      msg: `Correct : ${corrected} , Failed : ${failed}\r\n`,
+    });
+  }
+};
 
 onmessage = async (event) => {
   if (event.data.command == "RUN") {
@@ -132,7 +132,7 @@ onmessage = async (event) => {
     __labels = event.data.labels;
     if (!processing) {
       processing = true;
-      //await evaluateAllDataset();
+      await evaluateAllDataset();
       process();
     }
   } else if (event.data.command == "RESPONSE") {

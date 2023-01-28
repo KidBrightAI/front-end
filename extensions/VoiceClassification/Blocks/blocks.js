@@ -78,6 +78,21 @@ export default (Blockly, that) => {
     return [code, Blockly.JavaScript.ORDER_NONE];
   };
 
+  Blockly.Blocks["tfjs_validate_all_dataset"] = {
+    init: function () {
+      this.appendDummyInput().appendField("validate model with dataset");
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(230);
+      this.setTooltip("");
+      this.setHelpUrl("");
+    },
+  };
+  Blockly.JavaScript["tfjs_validate_all_dataset"] = function (block) {
+    // TODO: Assemble JavaScript into code variable.
+    var code = "await evaluateAllDataset();\n";
+    return code;
+  };
   //=====================================//
 
   Blockly.Blocks["move"] = {

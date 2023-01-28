@@ -124,6 +124,10 @@ const evaluateAllDataset = async function () {
       msg: `Correct : ${corrected} , Failed : ${failed}\r\n`,
     });
   }
+  postMessage({
+    command: "PRINT",
+    msg: `Accuracy : ${(corrected / (corrected + failed)) * 100}%\r\n`,
+  });
 };
 
 onmessage = async (event) => {

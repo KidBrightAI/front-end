@@ -301,6 +301,7 @@ export default `<xml>
     <block type="tfjs_wakeword_detection_get_class_name"></block>
     <block type="tfjs_wakeword_detection_get_class_index"></block>
     <block type="tfjs_wakeword_detection_get_class_prob"></block>
+    <block type="tfjs_validate_all_dataset"></block>
 
     <label text="Simulator Robot" web-class="ioLabel"></label>
     

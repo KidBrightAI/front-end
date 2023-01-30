@@ -93,7 +93,7 @@ export default (Blockly, that) => {
     if (dropdown_infotype == "classname") {
       result = `__bboxes[${value_n}].class`;
     } else if (dropdown_infotype == "probability") {
-      result = `__bboxes[${value_n}].score`;
+      result = `(Math.round( __bboxes[${value_n}].score * 100 * 1e2 ) / 1e2)`;
     } else if (dropdown_infotype == "class_index") {
       result = `__bboxes[${value_n}].index`;
     } else if (dropdown_infotype == "width") {

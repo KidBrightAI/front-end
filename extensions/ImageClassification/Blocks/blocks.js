@@ -55,7 +55,8 @@ export default (Blockly, that) => {
     },
   };
   Blockly.JavaScript["tfjs_classification_get_class_prob"] = function (block) {
-    var code = "(__data ? __data[__maxIndex] : null)";
+    var code =
+      "(__data ? Math.round( __data[__maxIndex] * 100 * 1e2 ) / 1e2  : null)";
     return [code, Blockly.JavaScript.ORDER_ATOMIC];
   };
 

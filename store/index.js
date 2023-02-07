@@ -4,13 +4,14 @@ import axios from "axios";
 const robotIp =
   location.hostname === "raspberrypi.local" ||
   location.hostname === "192.168.2.1" ||
-  //location.hostname === "localhost" ||
+  location.hostname === "localhost" ||
   location.hostname.startsWith("192.168.") ||
   location.hostname.startsWith("10.0.");
 
 export const state = () => {
-  let hostname = window.location.hostname; //"192.168.1.150";
+  let hostname = "192.168.1.114"; //window.location.hostname; //"192.168.1.150";
   return {
+    backend: null,
     initialDevice: robotIp ? "ROBOT" : "BROWSER",
     currentDevice: robotIp ? "ROBOT" : "BROWSER", //BROWSER, ROBOT , should auto detect
     serverUrl: `http://${hostname}:5000`,
@@ -59,6 +60,18 @@ export const actions = {
   async changeDevice(context, deviceType) {
     //do something
     context.commit("setDevice", deviceType);
+  },
+  async getCurrentBackend({ state, commit }) {
+    try {
+      const res = await axios.get(state.serverUrl + "/backend");
+      if (res && res.data.result && res.data.result == "OK") {
+        console.log("current backend = ");
+        console.log(res.data.data);
+        commit("backend", res.data.data);
+      }
+    } catch (err) {
+      console.log("load wifi failed ", err);
+    }
   },
   async getCurrentWifi({ state, commit }) {
     try {

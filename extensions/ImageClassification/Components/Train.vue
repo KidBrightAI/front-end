@@ -190,6 +190,7 @@ export default {
       if (modelEdgeEntry.isFile === true) {
         this.saveEdgeTPU(this.getBaseURL + "/model_edgetpu.tflite");
       }
+      //============ download tflite =============//
     },
     downloadModel: async function () {
       let res = await this.convert_model();

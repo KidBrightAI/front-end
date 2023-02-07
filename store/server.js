@@ -129,6 +129,7 @@ export const actions = {
       let project_id = rootState.project.project.id;
       const res = await axios.post(state.url + "/convert_model", {
         project_id: project_id,
+        backend: rootState.currentDevice == "ROBOT" ? rootState.backend : "",
       });
       if (res.status == 200 && res.data.result == "OK") {
         commit("setConverted", true);

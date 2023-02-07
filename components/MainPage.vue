@@ -54,6 +54,7 @@ export default {
       console.log("Browser Mode");
     }else{
       await this.getCurrentWifi();
+      await this.getCurrentBackend();
     }
   },
   computed: {
@@ -66,7 +67,7 @@ export default {
     ...mapState(['currentDevice','currentWifi','connectWifiModal','isRunning'])
   },
   methods: {
-    ...mapActions(["getCurrentWifi"]),
+    ...mapActions(["getCurrentWifi","getCurrentBackend"]),
     projectCreated(project){
       this.selectedMenu = 0;
       this.$nextTick(()=>{

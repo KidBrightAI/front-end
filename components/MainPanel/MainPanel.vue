@@ -95,9 +95,7 @@
             inactive: currentDevice == 'BROWSER' && !project.tfjs,
           }"
           @click="
-            if (project.id && project.tfjs) {
               handleTabChange(4);
-            }
           "
         >
           <img src="~/assets/images/UI/png/code.png" alt="" srcset="" />

@@ -9,7 +9,7 @@ const robotIp =
   location.hostname.startsWith("10.0.");
 
 export const state = () => {
-  let hostname = "192.168.1.114"; //window.location.hostname; //"192.168.1.150";
+  let hostname = window.location.hostname; //"192.168.1.150";
   return {
     backend: null,
     initialDevice: robotIp ? "ROBOT" : "BROWSER",
@@ -54,6 +54,9 @@ export const mutations = {
   setImageBytes(state, imageBytes) {
     state.imageBytes = imageBytes;
   },
+  setBackend(state, data) {
+    state.backend = data;
+  },
 };
 
 export const actions = {
@@ -67,7 +70,7 @@ export const actions = {
       if (res && res.data.result && res.data.result == "OK") {
         console.log("current backend = ");
         console.log(res.data.data);
-        commit("backend", res.data.data);
+        commit("setBackend", res.data.data);
       }
     } catch (err) {
       console.log("load wifi failed ", err);

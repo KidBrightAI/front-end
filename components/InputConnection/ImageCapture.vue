@@ -11,15 +11,7 @@
         @click="nextCamera"
       ></b-avatar>
     </div>
-    <vue-web-cam
-        :width="width"
-        height="auto"
-        ref="webcam"
-        @cameras="onCameras"
-        @started="onStarted"
-        @stopped="onStoped"
-        :deviceId="captureDevice"
-    />
+    
     <div v-if="deviceType == 'STREAM'">
       <b-img
         ref="displayImage"
@@ -29,6 +21,16 @@
       >
       </b-img>
     </div>
+    <vue-web-cam
+        v-show="deviceType != 'STREAM'"
+        :width="width"
+        height="auto"
+        ref="webcam"
+        @cameras="onCameras"
+        @started="onStarted"
+        @stopped="onStoped"
+        :deviceId="captureDevice"
+    />
   </div>
 </template>
 <script>
@@ -97,10 +99,14 @@ export default {
       console.log("capture devices : ", devices.length);
     },
     onStarted() {
-      this.$emit("started");
+      if(this.deviceType == "WEBCAM"){
+        this.$emit("started");
+      }
     },
     onStoped() {
-      this.$emit("stoped");
+      if(this.deviceType == "WEBCAM"){
+        this.$emit("stoped");
+      }
     },
     nextCamera() {
       this.currentCaptureDeviceIndex++;
@@ -116,6 +122,10 @@ export default {
         this.$refs.webcam.changeCamera(
           this.captureDevices[this.currentCaptureDeviceIndex]
         );
+      }
+      else if(this.deviceType == "STREAM"){
+        console.log("start stream");
+        this.$emit("started");
       }
       // reset canvas
       this.ctx = null;

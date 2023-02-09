@@ -1,12 +1,6 @@
 export default (Blockly, that) => {
   // ========== classification process ========== //
   Blockly.Python["start_image_classification"] = function (block) {
-    //var code = Blockly.readPythonFile("/getPython" + "?file=start_object_detector.py")
-    //var code1 = code.toString().split("\n");
-    //console.log("Split code")
-    //code1.splice(6, 0, "\tcommand=\'rosrun kidbright_tpu tpu_detect.py\'");
-    //var text = code1.join("\n");
-    //console.log(this.$store.getters.getProjectDir )
     var cc =
       "import rosnode\nimport subprocess\nimport time\nimport os\ncur_dir_path = os.path.dirname(os.path.realpath(__file__))\nros_nodes = rosnode.get_node_names()\nif not '/image_class' in ros_nodes:\n";
     cc =
@@ -19,13 +13,6 @@ export default (Blockly, that) => {
   };
 
   Blockly.Python["init_ros_node"] = function (block) {
-    // var code =
-    //   "from geometry_msgs.msg import Twist\nimport rospy\nimport time\nrospy.init_node('get_center', anonymous=True)\nvelocity_publisher = rospy.Publisher('/cmd_vel', Twist, queue_size=1)\nvel_msg = Twist()\n";
-
-    // code =
-    //   code +
-    //   "import roslib\nimport rospy\nfrom kidbright_tpu.msg import tpu_object\nfrom kidbright_tpu.msg import tpu_objects\nfrom std_msgs.msg import String\n";
-    // return code;
     var code =
       "from geometry_msgs.msg import Twist\nimport rospy\nimport time\nrospy.init_node('get_center', anonymous=True)\nvelocity_publisher = rospy.Publisher('/cmd_vel', Twist, queue_size=1)\nvel_msg = Twist()\n";
     code =

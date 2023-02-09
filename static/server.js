@@ -4,8 +4,8 @@ const app = express();
 const cors = require("cors");
 var bodyParser = require("body-parser");
 port = 80;
-app.use(express.static(path.join(__dirname, "./dist")));
-app.use(express.static(path.join(__dirname, "./users/")));
+app.use(express.static(path.join(__dirname, "./")));
+app.use(express.static(path.join(__dirname, "./")));
 
 app.use(cors());
 

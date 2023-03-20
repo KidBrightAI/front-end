@@ -216,7 +216,7 @@ export default {
         try{
           let code = this.project.code;
           let projectId = this.$store.state.project.project.id;
-          const res = await axios.post(this.terminalUrl + "/run", {project_id : projectId, code : btoa(code)});
+          const res = await axios.post(this.terminalUrl + "/run", {project_id : projectId, code : btoa(unescape(encodeURIComponent(code)))});
           console.log(res);
         }catch(err){
           console.log(err);
@@ -293,7 +293,7 @@ export default {
       this.term.write("$ ");
       this.canvas = document.createElement('canvas');
       this.ctx = this.canvas.getContext('2d');
-      
+
     }else if(this.currentDevice == "ROBOT"){
       try{
         this.socket = new WebSocket(this.terminalWebsocket);

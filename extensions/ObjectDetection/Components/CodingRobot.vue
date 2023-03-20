@@ -21,7 +21,7 @@
           <div v-else-if="currentDevice == 'ROBOT'" style="width: 40%; display: flex; align-items: center;">
             <img style="width:100%" :src="`${streamUrl}?topic=/output/image_${isRunning?'detected':'raw'}&type=ros_compressed`">
           </div>
-          
+
         </div>
         <div style="height: 200px; display: flex">
           <div
@@ -163,7 +163,7 @@ export default {
         try{
           let code = this.project.code;
           let projectId = this.$store.state.project.project.id;
-          const res = await axios.post(this.terminalUrl + "/run", {project_id : projectId, code : btoa(code)});
+          const res = await axios.post(this.terminalUrl + "/run", {project_id : projectId, code : btoa(unescape(encodeURIComponent(code)))});
         }catch(err){
           console.log(err);
         }
@@ -184,7 +184,7 @@ export default {
           console.log(err);
         }
       }
-      
+
     },
     socket_opened(){
       this.term.write("\r\n*** Connected to backend ***\r\n");

@@ -9,7 +9,7 @@ const robotIp =
   location.hostname.startsWith("10.0.");
 
 export const state = () => {
-  let hostname = window.location.hostname; //"192.168.1.150";
+  let hostname = "192.168.1.107"; //window.location.hostname; //"192.168.1.150";
   return {
     backend: null,
     initialDevice: robotIp ? "ROBOT" : "BROWSER",
@@ -18,6 +18,7 @@ export const state = () => {
     streamUrl: `http://${hostname}:8080/stream`,
     terminalUrl: `http://${hostname}:8888`,
     terminalWebsocket: `ws://${hostname}:8888`,
+    rosWebsocket: `ws://${hostname}:9090`,
     currentWifi: null,
     isRunning: false,
     selectedMenu: 0,

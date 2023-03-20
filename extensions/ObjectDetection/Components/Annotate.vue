@@ -5,11 +5,11 @@
         <div class="d-flex flex-fill align-items-center justify-content-center view-panel">
           <image-display v-show="current.length" :id="current.slice(-1).pop()" ref="img"></image-display>
           <div class="cropbox_container" :style="{width: cropboxSize[0] + 'px', height: cropboxSize[1]+'px'}">
-            <vue-crop 
+            <vue-crop
               :disabled="!(cropboxSize[2] > 0 && cropboxSize[3] > 0 && currentLabel)"
-              :id="current.slice(-1).pop()" 
-              :allowStartNewCrop="true" 
-              :label="currentLabel" 
+              :id="current.slice(-1).pop()"
+              :allowStartNewCrop="true"
+              :label="currentLabel"
               :dimension="cropboxSize"
               ref="cropbox"
             >
@@ -18,8 +18,6 @@
           <p class="view-img-desc" v-if="!current.length">
             No selected image, please click on the image below to select.
           </p>
-          <dataset-counter class="second-counter" prefix="Labeled" seperator="of" :current="getLabeledLength" suffix="Image"></dataset-counter>
-          <dataset-counter prefix="Selected" seperator="of" :current="current.length" suffix="Image"></dataset-counter>
         </div>
         <image-dataset-list v-model="current" :multiple="true" :showInfo="true"></image-dataset-list>
       </div>
@@ -81,6 +79,8 @@
               </div>
             </div>
           </div>
+          <dataset-counter class="second-counter" prefix="Labeled" seperator="of" :current="getLabeledLength" suffix="Image"></dataset-counter>
+          <dataset-counter prefix="Selected" seperator="of" :current="current.length" suffix="Image"></dataset-counter>
         </div>
         <div class="w-100"></div>
       </div>

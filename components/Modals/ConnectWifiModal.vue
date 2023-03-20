@@ -30,10 +30,10 @@
           <b-dropdown-item
             v-for="(ssid,i) in wifiList"
             :key="i"
-            :value="ssid"
-            @click="selected_ssid = ssid"
+            :value="ssid.ssid"
+            @click="selected_ssid = ssid.ssid"
           >
-            {{ ssid }}
+            {{ ssid.ssid }}
           </b-dropdown-item>
         </b-dropdown>
 
@@ -57,7 +57,7 @@
 import axios from "axios";
 import { mapState, mapActions, mapMutations  } from 'vuex';
 export default {
-  components: { 
+  components: {
   },
   name : "ConnectWifiModal",
     data(){
@@ -76,11 +76,11 @@ export default {
     async listWifi(){
       this.loading = true;
       try{
-      const res = await axios.get(this.serverUrl + "/wifi");
-      if(res.data.result && res.data.result == "OK"){
-        this.wifiList = res.data.data;
-      }
-      this.loading = false;
+        const res = await axios.get(this.serverUrl + "/wifi");
+        if(res.data.result && res.data.result == "OK"){
+          this.wifiList = res.data.data;
+        }
+        this.loading = false;
       }catch(err){
         this.loading = false;
       }
@@ -102,9 +102,18 @@ export default {
     async connectToWifi(ev){
       ev.preventDefault();
       this.saving = true;
-      
-      this.saving = false;
-      this.$bvModal.hide("wifi_conn");
+      try {
+        const res = await axios.post(this.serverUrl + "/wifi", { ssid: this.selected_ssid, password: this.wifi_password });
+        if (res.data.result && res.data.result == "OK") {
+          this.$toast.success("เชื่อมต่อ WiFi สำเร็จ");
+        }
+      } catch (err) {
+        this.$toast.error("เชื่อมต่อ WiFi ล้มเหลว :" + err.message);
+      } finally {
+        this.saving = false;
+        this.loading = false;
+        this.$bvModal.hide("wifi_conn");
+      }
     }
   },
 }

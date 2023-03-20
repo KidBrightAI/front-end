@@ -29,6 +29,14 @@ export default {
         src: "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js",
         type: "text/javascript",
       },
+      {
+        src: "http://static.robotwebtools.org/EventEmitter2/current/eventemitter2.js",
+        type: "text/javascript",
+      },
+      {
+        src: "http://static.robotwebtools.org/roslibjs/current/roslib.js",
+        type: "text/javascript",
+      },
     ],
   },
   css: ["~/assets/css/styles.scss"],

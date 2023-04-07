@@ -9,7 +9,7 @@ const robotIp =
   location.hostname.startsWith("10.0.");
 
 export const state = () => {
-  let hostname = "192.168.1.107"; //window.location.hostname; //"192.168.1.150";
+  let hostname = "192.168.1.48"; //window.location.hostname; //"192.168.1.150";
   return {
     backend: null,
     initialDevice: robotIp ? "ROBOT" : "BROWSER",

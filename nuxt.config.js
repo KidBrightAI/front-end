@@ -30,11 +30,7 @@ export default {
         type: "text/javascript",
       },
       {
-        src: "http://static.robotwebtools.org/EventEmitter2/current/eventemitter2.js",
-        type: "text/javascript",
-      },
-      {
-        src: "http://static.robotwebtools.org/roslibjs/current/roslib.js",
+        src: "https://cdn.jsdelivr.net/npm/roslib@1/build/roslib.min.js",
         type: "text/javascript",
       },
     ],

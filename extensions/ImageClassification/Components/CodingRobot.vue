@@ -147,18 +147,10 @@ export default {
     ...mapState(["currentDevice", "serverUrl", "streamUrl","terminalUrl","terminalWebsocket"]),
     ...mapState("server", ["url"]),
     blocks(){
-      if(this.currentDevice == "BROWSER"){
-        return Blocks;
-      }else if(this.currentDevice == "ROBOT"){
-        return RobotBlocks;
-      }
+      return RobotBlocks;
     },
     toolbox(){
-      if(this.currentDevice == "BROWSER"){
-        return Toolbox;
-      }else if(this.currentDevice == "ROBOT"){
-        return RobotToolbox;
-      }
+      return RobotToolbox;
     }
   },
   mounted() {

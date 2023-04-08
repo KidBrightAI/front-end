@@ -1,8 +1,10 @@
 <template>
   <div class="recorder-container d-flex align-items-center">
-    <div v-if="recording" class="recorder-container-active"></div>
     <p v-if="counting > 0" class="counting-timer-p">
       {{ counting }}
+    </p>
+    <p v-if="status" class="counting-timer-p">
+      {{ status }}
     </p>
     <div class="voice-meter">
       <canvas id="uv-meter" width="20"></canvas>
@@ -102,11 +104,12 @@ export default {
       //- ros -//
       ros: null,
       goal: null,
+      feedback: "",
     };
   },
   computed: {
     ...mapState('project', ['project']),
-    ...mapState(['currentDevice']),
+    ...mapState(['currentDevice','rosWebsocket']),
   },
   async mounted() {
     await this.initRecord();
@@ -134,19 +137,35 @@ export default {
   },
   methods: {
     onFeedback(fb) {
+      this.feedback = fb.status;
       console.log("feedback : ", fb.status);
+      if (this.feedback == "START_RECORD") {
+        this.startRecord();
+      }
     },
     onResult(result) {
       console.log("record resulted");
+      this.feedback = "Waiting ...";
       let results = result.result.split("$");
       if (results.length == 4 && results[0] == "SUCCESS") {
         let wav = Uint8Array.from(atob(results[1]), c => c.charCodeAt(0))
         let mfcc = Uint8Array.from(atob(results[2]), c => c.charCodeAt(0))
         let wavform = Uint8Array.from(atob(results[3]), c => c.charCodeAt(0))
-
+        this.$emit("recorded", {
+          sound: new Blob([wav]),
+          preview: new Blob([wavform]),
+          mfcc: new Blob([mfcc])
+        });
       } else if (results.length == 1 && results[0] == "TIMEOUT") {
-
+        this.$emit("recorded", {
+          sound: null,
+          preview: null,
+          mfcc: null
+        });
+        this.feedback = "Timeout";
       }
+      this.clearCanvas();
+      this.endRecord();
     },
     onRosConnected() {
       console.log("ROS connected");
@@ -204,7 +223,13 @@ export default {
       await this.$helper.sleep(1000);
       this.counting = 0;
       //---------------------------//
+      this.status = "";
       // ROS call here
+      this.goal.goalMessage.goal = {
+        projectid: this.project.id,
+        duration: this.project.options.duration,
+        threshold: this.threshold / 100
+      }
       this.goal.send();
     },
     async endContinueRecord(){

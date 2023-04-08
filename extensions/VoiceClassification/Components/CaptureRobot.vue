@@ -106,20 +106,22 @@ export default {
         await this.$refs["mfcc-modal"].display(id);
       }
     },
-    async onRecordComplete({sound, preview, mfcc}){
-      let data = {
-        id : this.$helper.randomString(16),
-        thumbnail : null,
-        image: preview,
-        mfcc: mfcc,
-        annotate : [],
-        sound : sound,
-        class: null,
-        ext : "jpg",
-        sound_ext : "wav"
-      };
-      let res = await this.addData(data);
-      this.current = [data.id];
+    async onRecordComplete({ sound, preview, mfcc }) {
+      if (sound && preview && mfcc) {
+        let data = {
+          id: this.$helper.randomString(16),
+          thumbnail: null,
+          image: preview,
+          mfcc: mfcc,
+          annotate: [],
+          sound: sound,
+          class: null,
+          ext: "jpg",
+          sound_ext: "wav"
+        };
+        let res = await this.addData(data);
+        this.current = [data.id];
+      }
       this.isRecording = false;
     },
     async play(id){

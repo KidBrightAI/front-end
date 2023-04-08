@@ -5,22 +5,13 @@
         <div class="d-flex flex-fill flex-row" style="background-color: white">
           <blockly-code
             ref="blockly"
-            :style="{ width: currentDevice == 'BROWSER' ? '50%' : '60%' }"
+            style="width:60%;"
             :toolbox="toolbox"
             :blocks="blocks"
-            :language="currentDevice == 'BROWSER' ? 'javascript' : 'python'"
+            language="python"
           ></blockly-code>
-          <simulator-controller
-            v-if="currentDevice == 'BROWSER'"
-            style="width: 50%"
-            ref="simulator"
-            :showController="false"
-            :captureKey="false"
-            :classify="result"
-          >
-            <image-source-streamer ref="streamer" :source="image"></image-source-streamer>
-          </simulator-controller>
-          <div v-else-if="currentDevice == 'ROBOT'" style="width: 40%; display: flex; align-items: center;">
+          <!--image-source-streamer ref="streamer" :source="image"></image-source-streamer -->
+          <div style="width: 40%; display: flex; align-items: center;">
             <img v-if="isRunning" style="width:100%" :src="`${streamUrl}?topic=/output/image_detected&type=ros_compressed`">
             <img v-else style="width:100%" :src="`${streamUrl}?topic=/output/image_raw&type=ros_compressed`">
           </div>
@@ -77,7 +68,7 @@ import "xterm/css/xterm.css";
 import axios from "axios";
 
 import ImageSourceStreamer from "~/components/InputConnection/ImageSourceStreamer.vue";
-import runner from "../classify.worker.js";
+
 
 export default {
   name: "BlocklyComponent",
@@ -89,14 +80,8 @@ export default {
   data() {
     return {
       socket: null,
-      model: null,
       isRunning: false,
-      result: "",
-      worker: null,
-      canvas : null,
-      ctx : null,
-      image : null,
-      imageTimer : null,
+      result: ""
     };
   },
   methods: {
@@ -109,136 +94,31 @@ export default {
         this.stop();
       }
     },
-    getImageData(src){
-      return new Promise((resolve,reject)=>{
-        let image = new Image();
-        image.onload = ()=>{
-          this.canvas.width = image.width;
-          this.canvas.height = image.height;
-          this.ctx.drawImage(image,0,0);
-          resolve(this.ctx.getImageData(0, 0, image.width, image.height));
-        };
-        image.src = src;
-      });
-    },
-    async loopGetImageData(){
-      let imgStr = "data:image/jpeg;base64," + this.$refs.simulator.$refs.gameInstance.contentWindow.ImageBase64();
-      this.image = await this.getImageData(imgStr);
-    },
-    async processCommand(event){
-      if(event.data.command == "PRINT"){
-        this.term.write(event.data.msg);
-      }else if(event.data.command == "MOVE"){
-        let lin = event.data.lin;
-        let ang = event.data.ang;
-        this.$refs.simulator.$refs.gameInstance.contentWindow.VK_MovementDirec(lin,ang);
-      }else if(event.data.command == "REQUEST"){
-        if(event.data.data == "MODEL"){
-          let modelInfo = await this.initModel();
-          console.log("======== request model ==========");
-          console.log(modelInfo);
-          this.worker.postMessage({ command : "RESPONSE", subcommand : "MODEL", data: modelInfo});
-        }
-        if(event.data.data == "IMAGE"){
-          this.worker.postMessage({command : "RESPONSE", subcommand : "IMAGE", data: this.image});
-        }
-      }else if(event.data.command == "TERMINATED"){
-        this.term.write(event.data.msg);
-        this.isRunning = false;
-        this.stop();
-      }
-    },
     onWorkerError(err){
       console.log("worker error : ");
       console.log(err);
       console.log(err.error);
     },
-    async initModel() {
-      var modelJson = await axios.get(this.project.tfjs);
-      var weights = [];
-      let baseModelPath = this.project.tfjs.substring(
-        0,
-        this.project.tfjs.lastIndexOf("/")
-      );
-      let downloadPromises = [];
-      for (let binFile of modelJson.data.weightsManifest[0].paths) {
-        let w = axios.get(baseModelPath + "/" + binFile, {
-          responseType: "arraybuffer",
-        });
-        downloadPromises.push(w);
-      }
-      let downloadedWeight = await Promise.all(downloadPromises);
-      weights = downloadedWeight.map((el) => el.data);
-      let weightData = this.$helper.concatenateArrayBuffers(weights);
-      return {
-        modelJson : modelJson.data,
-        weight: weightData
-      }
-    },
 
-    async getLabels() {
-      const __label_res = await axios.get(this.project.labelFile);
-      const __labels_text = __label_res.data;
-      let labels = __labels_text
-        .replaceAll("\r", "")
-        .split("\n")
-        .map((el) => el.trim())
-        .filter((el) => el);
-      console.log(labels);
-      return labels;
-    },
     run : async function() {
-      if(this.currentDevice == "BROWSER"){
-        this.term.write("Running ...\r\n");
-        //========== start worker ==============//
-        this.worker = new runner();
-        this.worker.onerror = this.onWorkerError.bind(this);
-        this.worker.onmessage = this.processCommand.bind(this);
-        let labels = this.project.modelLabel;
-        if(Array.isArray(labels) && !labels.length){
-          labels = await this.getLabels();
-        }
-        //========== load tfjs model ===========//
-        this.$refs.simulator.$refs.gameInstance.contentWindow.MSG_RunProgram("1");
-        var code = this.project.code;
-        var codeAsync = `(async () => {
-          ${code}
-          postMessage({ command: "TERMINATED", msg: "Terminated\\r\\n" });
-        })();`;
-        console.log(codeAsync);
-        try {
-          this.worker.postMessage({ command: "RUN", code: codeAsync, labels : labels });
-          //eval(codeAsync);
-        } catch (error) {
-          console.log(error);
-        }
-      }else if(this.currentDevice == "ROBOT"){
-        try{
-          let code = this.project.code;
-          let projectId = this.$store.state.project.project.id;
-          const res = await axios.post(this.terminalUrl + "/run", {project_id : projectId, code : btoa(unescape(encodeURIComponent(code)))});
-          console.log(res);
-        }catch(err){
-          console.log(err);
-        }
+      try{
+        let code = this.project.code;
+        let projectId = this.$store.state.project.project.id;
+        const res = await axios.post(this.terminalUrl + "/run", {project_id : projectId, code : btoa(unescape(encodeURIComponent(code)))});
+        console.log(res);
+      }catch(err){
+        console.log(err);
       }
     },
     stop() {
       console.log("stop!!!");
-      if(this.currentDevice == "BROWSER"){
-        this.$refs.simulator.$refs.gameInstance.contentWindow.MSG_RunProgram("0");
-        //========== stop web worker ======//
-        //this.worker.onmessage = null;
-        this.worker.terminate();
-      }else if(this.currentDevice == "ROBOT"){
-        try{
-          if(this.socket && this.socket.readyState !== WebSocket.CLOSED){
-            //this.socket.send(43);
-            this.socket.send("CMD:TERM");
-          }
-        }catch(err){
-          console.log(err);
+      try{
+        if(this.socket && this.socket.readyState !== WebSocket.CLOSED){
+          //this.socket.send(43);
+          this.socket.send("CMD:TERM");
         }
+      }catch(err){
+        console.log(err);
       }
     },
     socket_opened(){
@@ -289,29 +169,22 @@ export default {
     this.term.open(this.$refs.terminal);
     fitAddon.fit();
     console.log("model tfjs path : ", this.project.tfjs);
-    if(this.currentDevice == "BROWSER"){
+    try{
+      this.socket = new WebSocket(this.terminalWebsocket);
       this.term.write("$ ");
-      this.canvas = document.createElement('canvas');
-      this.ctx = this.canvas.getContext('2d');
-
-    }else if(this.currentDevice == "ROBOT"){
-      try{
-        this.socket = new WebSocket(this.terminalWebsocket);
-        this.term.write("$ ");
-        this.socket.onopen = this.socket_opened.bind(this);
-        this.socket.onmessage = this.socket_message.bind(this);
-        this.socket.onclose = this.socked_onclose.bind(this);
-        this.socket.onerror = this.socket_error.bind(this);
-        this.term.onKey(key => {
-          const char = key.key;
-          if(this.socket && this.socket.readyState !== WebSocket.CLOSED){
-            this.socket.send(char);
-          }
-        });
-      }catch(err){
-        this.term.write("ERROR : Cannot connect to server\r\n");
-        this.term.write(err.message+"\r\n");
-      }
+      this.socket.onopen = this.socket_opened.bind(this);
+      this.socket.onmessage = this.socket_message.bind(this);
+      this.socket.onclose = this.socked_onclose.bind(this);
+      this.socket.onerror = this.socket_error.bind(this);
+      this.term.onKey(key => {
+        const char = key.key;
+        if(this.socket && this.socket.readyState !== WebSocket.CLOSED){
+          this.socket.send(char);
+        }
+      });
+    }catch(err){
+      this.term.write("ERROR : Cannot connect to server\r\n");
+      this.term.write(err.message+"\r\n");
     }
   },
   beforeUnmount(){

@@ -3,8 +3,8 @@
     <p v-if="counting > 0" class="counting-timer-p">
       {{ counting }}
     </p>
-    <p v-if="status" class="counting-timer-p">
-      {{ status }}
+    <p v-if="feedback" class="counting-timer-p">
+      {{ feedback }}
     </p>
     <div class="voice-meter">
       <canvas id="uv-meter" width="20"></canvas>
@@ -156,6 +156,8 @@ export default {
           preview: new Blob([wavform]),
           mfcc: new Blob([mfcc])
         });
+        this.clearCanvas();
+        this.endRecord();
       } else if (results.length == 1 && results[0] == "TIMEOUT") {
         this.$emit("recorded", {
           sound: null,
@@ -163,9 +165,10 @@ export default {
           mfcc: null
         });
         this.feedback = "Timeout";
+        this.clearCanvas();
+        this.endRecord();
       }
-      this.clearCanvas();
-      this.endRecord();
+
     },
     onRosConnected() {
       console.log("ROS connected");
@@ -223,7 +226,7 @@ export default {
       await this.$helper.sleep(1000);
       this.counting = 0;
       //---------------------------//
-      this.status = "";
+      this.feedback = "";
       // ROS call here
       this.goal.goalMessage.goal = {
         projectid: this.project.id,

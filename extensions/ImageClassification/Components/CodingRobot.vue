@@ -58,8 +58,6 @@
 import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
 import SimulatorController from "~/components/InputConnection/SimulatorController.vue";
 import BlocklyCode from "@/components/BlocklyCode.vue";
-import Toolbox from "../Blocks/toolbox";
-import Blocks from "../Blocks/blocks";
 import RobotBlocks from "../Blocks/blocks_robot";
 import RobotToolbox from "../Blocks/robot_toolbox";
 import { Terminal } from "xterm";

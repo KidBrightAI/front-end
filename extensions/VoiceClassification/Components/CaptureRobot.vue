@@ -51,7 +51,6 @@ import RobotSoundCapture from '~/components/InputConnection/RobotSoundCapture.vu
 import SoundDatasetList from "~/components/InputConnection/SoundDatasetList.vue";
 import DatasetCounter from '~/components/InputConnection/DatasetCounter.vue';
 import MfccModal from "../Modals/MfccModal.vue"
-import { thisExpression } from 'babel-types';
 export default {
   name: "Capture",
   components: {

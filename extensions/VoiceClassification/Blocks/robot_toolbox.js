@@ -293,9 +293,9 @@ export default `<xml>
 
   <category name="KidBright AI" colour="%{BKY_VARIABLES_HUE}">
     <block type="init_ros_node"></block>
-    <block type="start_image_classification"></block>
+    <block type="start_voice_classification"></block>
     <block type="rospy_loop"></block>
-    <block type="robot_classification_classify"></block>
+    <block type="robot_voice_classify"></block>
     <block type="get_class"></block>
     <block type="get_confident"></block>
     <block type="delay">

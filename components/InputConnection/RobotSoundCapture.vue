@@ -138,8 +138,7 @@ export default {
   methods: {
     onFeedback(fb) {
       this.feedback = fb.status;
-      console.log("feedback : ", fb.status);
-      if (this.feedback == "START_RECORD") {
+      if (this.feedback == "START_RECORD" && this.recording == false) {
         this.startRecord();
       }
     },
@@ -156,7 +155,6 @@ export default {
           preview: new Blob([wavform]),
           mfcc: new Blob([mfcc])
         });
-        this.clearCanvas();
         this.endRecord();
       } else if (results.length == 1 && results[0] == "TIMEOUT") {
         this.$emit("recorded", {
@@ -165,7 +163,6 @@ export default {
           mfcc: null
         });
         this.feedback = "Timeout";
-        this.clearCanvas();
         this.endRecord();
       }
 
@@ -179,17 +176,7 @@ export default {
     onRosClosed() {
       console.log("ROS Closed");
     },
-    async recordComplete(rec,blob){
-      console.log("recorded");
-      let img = await this.downloadPreview("waveform-client");
-      let mfcc = await this.downloadPreview("mfcc-client");
-      this.$emit("recorded", {sound : blob, preview : img, mfcc : mfcc});
-      this.clearCanvas();
-    },
-    recordTimeout(){
-      console.log("record timeout");
-      this.endRecord();
-    },
+
     downloadPreview(id){
       return new Promise(resolve=>{
         const tmpCanvas = document.getElementById(id);
@@ -214,6 +201,8 @@ export default {
     clearCanvas(){
       this.rmsCanvas.clearRect(0, 0, this.canvasSize[0], this.canvasSize[1]);
       this.uvCanvas.clearRect(0, 0, 20, this.canvasSize[1]);
+      this.counting = 0;
+      this.feedback = 0;
     },
     async continueRecord(){
       this.clearCanvas();
@@ -236,7 +225,7 @@ export default {
       this.goal.send();
     },
     async endContinueRecord(){
-
+      this.endRecord();
     },
 
     startRecord(){
@@ -246,7 +235,8 @@ export default {
       this.$emit("onRecording");
       console.log("=== start record ===");
     },
-    endRecord(){
+    endRecord() {
+      this.clearCanvas();
       this.recording = false;
       this.stopTimer();
       this.$emit("onStopRecord");

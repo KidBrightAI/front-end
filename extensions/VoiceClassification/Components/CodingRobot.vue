@@ -10,10 +10,10 @@
             :blocks="blocks"
             language="python"
           ></blockly-code>
-          <div style="width: 40%; display: flex; align-items: center;">
-            <continue-voice-capture ref="capture" @onImageData="onImageDataReady"></continue-voice-capture>
+          <div style="width: 40%; display: flex; align-items: center; flex-direction: column;">
             <img v-if="isRunning" style="width:100%" :src="`${streamUrl}?topic=/output/image_detected&type=ros_compressed`">
             <img v-else style="width:100%" :src="`${streamUrl}?topic=/output/image_raw&type=ros_compressed`">
+            <continue-mfcc-robot-capture ref="capture" @onImageData="onImageDataReady"></continue-mfcc-robot-capture>
           </div>
         </div>
         <div style="height: 200px; display: flex">
@@ -67,14 +67,14 @@ import { FitAddon } from "xterm-addon-fit";
 import "xterm/css/xterm.css";
 import axios from "axios";
 
-import ContinueVoiceCapture from '~/components/InputConnection/ContinueVoiceCapture.vue';
+import ContinueMfccRobotCapture from '~/components/InputConnection/ContinueMfccRobotCapture.vue';
 
 export default {
   name: "BlocklyComponent",
   components: {
     BlocklyCode,
     SimulatorController,
-    ContinueVoiceCapture
+    ContinueMfccRobotCapture
   },
   data() {
     return {

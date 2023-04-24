@@ -30,10 +30,9 @@
           <b-dropdown-item
             v-for="(ssid,i) in wifiList"
             :key="i"
-            :value="ssid.ssid"
-            @click="selected_ssid = ssid.ssid"
+            @click="selected_ssid = ssid"
           >
-            {{ ssid.ssid }}
+            {{ ssid }}
           </b-dropdown-item>
         </b-dropdown>
 
@@ -70,15 +69,16 @@ export default {
     };
   },
   computed: {
-    ...mapState(['serverUrl'])
+    ...mapState(['serverUrl','terminalUrl'])
   },
   methods: {
     async listWifi(){
       this.loading = true;
       try{
-        const res = await axios.get(this.serverUrl + "/wifi");
-        if(res.data.result && res.data.result == "OK"){
-          this.wifiList = res.data.data;
+        const res = await axios.get(this.terminalUrl + "/listWifi");
+        if(res.data.status && res.data.status == "OK"){
+          this.wifiList = res.data.ap;
+          console.log(this.wifiList);
         }
         this.loading = false;
       }catch(err){
@@ -103,8 +103,8 @@ export default {
       ev.preventDefault();
       this.saving = true;
       try {
-        const res = await axios.post(this.serverUrl + "/wifi", { ssid: this.selected_ssid, password: this.wifi_password });
-        if (res.data.result && res.data.result == "OK") {
+        const res = await axios.post(this.terminalUrl + "/wifiConnect", { ssid: this.selected_ssid, password: this.wifi_password });
+        if (res.data.status && res.data.status == "OK") {
           this.$toast.success("เชื่อมต่อ WiFi สำเร็จ");
         }
       } catch (err) {

@@ -13,7 +13,7 @@
           <div style="width: 40%; display: flex; align-items: center; flex-direction: column;">
             <img v-if="isRunning" style="width:100%" :src="`${streamUrl}?topic=/output/image_detected&type=ros_compressed`">
             <img v-else style="width:100%" :src="`${streamUrl}?topic=/output/image_raw&type=ros_compressed`">
-            <continue-mfcc-robot-capture ref="capture" @onImageData="onImageDataReady"></continue-mfcc-robot-capture>
+            <continue-mfcc-robot-capture ref="capture"></continue-mfcc-robot-capture>
           </div>
         </div>
         <div style="height: 200px; display: flex">
@@ -98,7 +98,14 @@ export default {
       try{
         let code = this.project.code;
         let projectId = this.$store.state.project.project.id;
-        const res = await axios.post(this.terminalUrl + "/run", {project_id : projectId, code : btoa(unescape(encodeURIComponent(code)))});
+
+        let threshold = this.$refs.capture.getThreshold();
+        this.$refs.capture.startListening();
+
+        console.log("run code with threshold = " + threshold);
+        code = code.replace("$#THRESHOLD$#", threshold);
+
+        const res = await axios.post(this.terminalUrl + "/run", { project_id: projectId, code: btoa(unescape(encodeURIComponent(code))) });
         console.log(res);
       }catch(err){
         console.log(err);
@@ -106,6 +113,7 @@ export default {
     },
     stop() {
       console.log("stop!!!");
+      this.$refs.capture.stopListening();
       try{
         if(this.socket && this.socket.readyState !== WebSocket.CLOSED){
           //this.socket.send(43);

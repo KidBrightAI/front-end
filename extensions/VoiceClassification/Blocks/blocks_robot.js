@@ -1,4 +1,5 @@
 export default (Blockly, that) => {
+  // console.log(that.project);
   // ========== classification process ========== //
   Blockly.Blocks["start_voice_classification"] = {
     init: function () {
@@ -12,9 +13,10 @@ export default (Blockly, that) => {
   };
   Blockly.Python["start_voice_classification"] = function (block) {
     var cc =
-      "import rosnode\nimport subprocess\nimport time\nimport os\ncur_dir_path = os.path.dirname(os.path.realpath(__file__))\nros_nodes = rosnode.get_node_names()\nif not '/image_class' in ros_nodes:\n";
+      "import rosnode\nimport subprocess\nimport time\nimport os\ncur_dir_path = os.path.dirname(os.path.realpath(__file__))\nros_nodes = rosnode.get_node_names()\nif not '/voice_class' in ros_nodes:\n";
     cc =
-      cc + "\tcommand='rosrun kidbright_tpu tpu_classify.py ' + cur_dir_path\n";
+      cc +
+      "\tcommand='rosrun kidbright_tpu tpu_voice.py ' + cur_dir_path + ' ' + str($#THRESHOLD$#)\n";
     cc =
       cc +
       "\tprocess = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)\n\ttime.sleep(10) \n";
@@ -33,7 +35,7 @@ export default (Blockly, that) => {
     },
   };
   Blockly.Python["robot_voice_classify"] = function (block) {
-    var code = `__output = rospy.wait_for_message('/tpu_objects', tpu_objects, timeout=4).tpu_objects\n`;
+    var code = `__output = rospy.wait_for_message('/tpu_objects', tpu_objects, timeout=120).tpu_objects\n`;
     return code;
   };
   //-------------------------------------------------//

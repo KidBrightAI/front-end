@@ -105,6 +105,7 @@ export default {
     ]),
     ...mapActions("server", ["connect", "convert_model"]),
     ...mapActions("dataset", ["addBlobToFs", "exists"]),
+    ...mapActions(["saveProject"]),
     openColab: () => {
       window.open(
         "https://colab.research.google.com/drive/1a14kNdqn6K3EN3P7sSB9wHnjjuvMB6Lf?usp=sharing",
@@ -219,7 +220,8 @@ export default {
             model_file: "Classifier"
           }
         );
-        if(serverDownloadModel && serverDownloadModel.data && serverDownloadModel.data.result === "OK"){
+        if (serverDownloadModel && serverDownloadModel.data && serverDownloadModel.data.result === "OK") {
+          await this.saveProject();
           this.$toast.success("ดาวน์โหลดข้อมูลสำเร็จ");
         }
       }

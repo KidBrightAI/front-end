@@ -221,8 +221,9 @@ export default {
             model_file: "Classifier"
           }
         );
-        if(serverDownloadModel && serverDownloadModel.data && serverDownloadModel.data.result === "OK"){
+        if (serverDownloadModel && serverDownloadModel.data && serverDownloadModel.data.result === "OK") {
           this.$toast.success("ดาวน์โหลดข้อมูลสำเร็จ");
+          await this.saveProject();
         }
       }
       this.isDownloading = false;
@@ -268,6 +269,7 @@ export default {
       "isConverting",
       "isConverted",
     ]),
+    ...mapActions(["saveProject"]),
     progressText(){
       if(this.isConverting){
         return "Converting...";

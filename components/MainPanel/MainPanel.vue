@@ -5,13 +5,13 @@
     <div class="left-bottom-content d-flex flex-fill position-relative">
       <div class="header-left-bar">
         <div class="proj-name">
-          {{ project.name }}
+          {{ project.name || 'ยังไม่ได้เลือกโปรเจค' }}
         </div>
-        <div v-if="project.id" class="proj-type">
-          Type : {{ project.projectTypeTitle }}
+        <div class="proj-type">
+          Type : {{ project.projectTypeTitle || '-' }}
         </div>
 
-        <div v-if="project.id" class="header-action-button">
+        <div class="header-action-button">
           <b-button
             :disabled="currentDevice == 'BROWSER'"
             @click="openWiFiModal"

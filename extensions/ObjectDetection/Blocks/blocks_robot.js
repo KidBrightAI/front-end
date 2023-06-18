@@ -26,7 +26,7 @@ export default (Blockly, that) => {
 
   Blockly.Python["yolo_detect"] = function (block) {
     var code =
-      "__objects = rospy.wait_for_message('/tpu_objects', tpu_objects, timeout=4).tpu_objects\n";
+      "__objects = rospy.wait_for_message('/tpu_objects', tpu_objects, timeout=30).tpu_objects\n";
     return code;
   };
 

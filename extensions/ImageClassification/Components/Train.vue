@@ -106,6 +106,7 @@ export default {
     ]),
     ...mapActions("server", ["connect", "convert_model"]),
     ...mapActions("dataset", ["addBlobToFs", "exists"]),
+    ...mapActions(["saveProject"]),
     openColab: () => {
       window.open(
         "https://colab.research.google.com/drive/1a14kNdqn6K3EN3P7sSB9wHnjjuvMB6Lf?usp=sharing",
@@ -225,6 +226,14 @@ export default {
           this.$toast.success("ดาวน์โหลดข้อมูลสำเร็จ");
           await this.saveProject();
         }
+      } else if (res && this.currentDevice == "ROBOT" && this.url.startsWith(this.serverUrl)) {
+        console.log("convert local project");
+        await this.syncModelFile(projectId);
+        let localDownloadResp = await axios.post(`${this.serverUrl}/download_local_project`, { project_id: projectId });
+        if (localDownloadResp && localDownloadResp.data && localDownloadResp.data.result === "OK") {
+          this.$toast.success("ดาวน์โหลดข้อมูลสำเร็จ");
+          await this.saveProject();
+        }
       }
       this.isDownloading = false;
     },
@@ -269,7 +278,6 @@ export default {
       "isConverting",
       "isConverted",
     ]),
-    ...mapActions(["saveProject"]),
     progressText(){
       if(this.isConverting){
         return "Converting...";

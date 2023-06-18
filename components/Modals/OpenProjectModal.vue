@@ -41,7 +41,7 @@
         </b-col>
       </b-row>
       <p class="p-notice-color small">* เลือกโฟลเดอร์ของโปรเจคที่ต้องการเปิด</p>
-      
+
     </div>
     <div v-if="step >= 2" class="text-center">
       <vm-progress
@@ -144,12 +144,15 @@ export default {
       );
       return new File([fileContent.data], filename);
     },
-    async getServerProjectFile(filename) {
+    async getServerProjectFile(filename, responseType = "blob") {
       let fileContent = await axios.get(
         `${this.serverUrl}/projects/${this.projectToOpen}/${filename}`,
-        { responseType: "blob" }
+        { responseType: responseType }
       );
-      return new File([fileContent.data], filename);
+      if (responseType == "blob") {
+        return new File([fileContent.data], filename);
+      }
+      return fileContent.data;
     },
     async openProjectHandle(e) {
       if (this.currentDevice == "BROWSER") {
@@ -274,7 +277,18 @@ export default {
           try{
             let file = await this.getServerProjectFile(`model_edgetpu.tflite`);
             await this.addFileToFs({ projectId: projectId, file: file });
-          }catch{}
+          } catch { }
+          try{
+            let file = await this.getServerProjectFile(`model.json`);
+            await this.addFileToFs({ projectId: projectId, file: file });
+          } catch { }
+          try{
+            let modelJson = await this.getServerProjectFile(`model.json`, "text");
+            for (let binFile of modelJson.weightsManifest[0].paths) {
+              let file = await this.getServerProjectFile(binFile);
+              await this.addFileToFs({ projectId: projectId, file: file });
+            }
+          } catch { }
           this.restoreDataset(projectJson.dataset.dataset);
           this.setProject(projectJson.project.project); //assign new dataset
           this.step = 3;
@@ -294,3 +308,4 @@ export default {
   },
 };
 </script>
+

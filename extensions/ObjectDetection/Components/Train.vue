@@ -103,19 +103,21 @@ export default {
       "saveEdgeTPU",
       "saveLabelFile",
       "saveAnchors",
+      "saveModelLabel"
     ]),
     ...mapActions("server", ["connect", "convert_model"]),
     ...mapActions("dataset", ["addBlobToFs", "exists"]),
+    ...mapActions(["saveProject"]),
     openColab: () => {
       window.open(
         "https://colab.research.google.com/drive/1a14kNdqn6K3EN3P7sSB9wHnjjuvMB6Lf?usp=sharing",
         "_blank"
       );
     },
-    downloadFile: async function (url) {
+    downloadFile: async function (url, outType="blob") {
       try {
         let tempFile = await axios.get(url, {
-          responseType: "blob",
+          responseType: outType,
           onDownloadProgress : (pg)=>{
             this.downloadProgress = Math.round((pg.loaded * 100) / pg.total);
           }
@@ -169,15 +171,14 @@ export default {
     syncModelFile: async function(projectId){
       this.downloadIndex = 1;
       this.downloadMaxFile = 4;
+
       //============= download label =============//
-      await this.downloadAndSave(
-        `${this.url}/projects/${projectId}/output/labels.txt`,
-        "labels.txt"
-      );
-      let labelFileEntry = await this.exists(`${projectId}/labels.txt`);
-      if (labelFileEntry.isFile === true) {
-        this.saveLabelFile(this.getBaseURL + "/labels.txt");
-      }
+      let labelsContent = await this.downloadFile(`${this.url}/projects/${projectId}/output/labels.txt`, "text");
+      console.log("----- download labels------");
+      console.log(labelsContent);
+      let labels = labelsContent.replace(/\r/g,'').split("\n").map(str=>str.trim()).filter(Boolean);
+      console.log(labels);
+      this.saveModelLabel(labels);
       //============= download anchors ===========//
       this.downloadIndex += 1;
       let anchorsText = await axios.get(
@@ -233,6 +234,15 @@ export default {
         );
         if(serverDownloadModel && serverDownloadModel.data && serverDownloadModel.data.result === "OK"){
           this.$toast.success("ดาวน์โหลดข้อมูลสำเร็จ");
+          await this.saveProject();
+        }
+      } else if (res && this.currentDevice == "ROBOT" && this.url.startsWith(this.serverUrl)) {
+        console.log("convert local project");
+        await this.syncModelFile(projectId);
+        let localDownloadResp = await axios.post(`${this.serverUrl}/download_local_project`, { project_id: projectId });
+        if (localDownloadResp && localDownloadResp.data && localDownloadResp.data.result === "OK") {
+          this.$toast.success("ดาวน์โหลดข้อมูลสำเร็จ");
+          await this.saveProject();
         }
       }
       this.isDownloading = false;

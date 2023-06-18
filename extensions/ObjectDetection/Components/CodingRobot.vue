@@ -19,7 +19,8 @@
             :bbox="result"
           ></simulator-controller>
           <div v-else-if="currentDevice == 'ROBOT'" style="width: 40%; display: flex; align-items: center;">
-            <img style="width:100%" :src="`${streamUrl}?topic=/output/image_${isRunning?'detected':'raw'}&type=ros_compressed`">
+            <img v-if="isRunning" style="width:100%" :src="`${streamUrl}?topic=/output/image_detected&type=ros_compressed`">
+            <img v-else style="width:100%" :src="`${streamUrl}?topic=/output/image_raw&type=ros_compressed`">
           </div>
 
         </div>
@@ -220,6 +221,13 @@ export default {
         return Toolbox;
       }else if(this.currentDevice == "ROBOT"){
         return RobotToolbox;
+      }
+    },
+    imageSrc() {
+      if (this.isRunning) {
+        return `${this.streamUrl}?topic=/output/image_detected&type=ros_compressed`
+      } else {
+        return `${this.streamUrl}?topic=/output/image_raw&type=ros_compressed`
       }
     }
   },

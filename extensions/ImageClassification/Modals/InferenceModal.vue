@@ -14,7 +14,7 @@
         :width="435"
         source=""
         ref="camera"
-        :simmulator="false"
+        :simulator="false"
         @started="(_) => (cameraReady = true)"
         @stoped="(_) => (cameraReady = false)"
       ></image-capture>

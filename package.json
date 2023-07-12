@@ -13,6 +13,13 @@
     "heroku-postbuild": "nuxt generate"
   },
   "dependencies": {
+    "@mediapipe/hands": "^0.4.1675469240",
+    "@tensorflow-models/hand-pose-detection": "^2.0.0",
+    "@tensorflow-models/knn-classifier": "^1.2.4",
+    "@tensorflow-models/pose-detection": "^2.1.0",
+    "@tensorflow/tfjs-backend-webgl": "^4.7.0",
+    "@tensorflow/tfjs-converter": "^4.7.0",
+    "@tensorflow/tfjs-core": "^4.7.0",
     "axios": "^0.26.1",
     "baklavajs": "^1.9.2",
     "blockly": "^7.20211209.4",
@@ -24,6 +31,7 @@
     "localforage": "^1.10.0",
     "meyda": "^5.5.0",
     "nuxt": "^2.15.8",
+    "splitpanes": "^2.4.1",
     "vue": "^2.6.14",
     "vue-chartjs": "^3.5.0",
     "vue-cropperjs": "^5.0.0",

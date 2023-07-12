@@ -146,6 +146,15 @@ export const actions = {
       return false;
     }
   },
+  // async trainLocalServer({ commit, dispatch, state, rootState }) {
+  //   if (rootState.project.project.model.code.includes("knn")) {
+  //     //create knn classifier
+  //     const classifier = knnClassifier.create();
+  //     for (let item of this.dataset.data) {
+  //       this.classifier.addExample(tf.tensor(item.keypoints), item.class);
+  //     }
+  //   }
+  // },
   async train({ commit, dispatch, state, rootState }) {
     console.log("start training ...");
     commit("setTraining", true);

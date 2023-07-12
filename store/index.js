@@ -1,12 +1,12 @@
 import JSZip from "jszip";
 import axios from "axios";
 
-const robotIp =
-  location.hostname === "raspberrypi.local" ||
-  location.hostname === "192.168.2.1" ||
-  location.hostname === "localhost" ||
-  location.hostname.startsWith("192.168.") ||
-  location.hostname.startsWith("10.0.");
+const robotIp = false;
+// location.hostname === "raspberrypi.local" ||
+// location.hostname === "192.168.2.1" ||
+// location.hostname === "localhost" ||
+// location.hostname.startsWith("192.168.") ||
+// location.hostname.startsWith("10.0.");
 
 export const state = () => {
   let hostname = window.location.hostname; //"192.168.1.150";

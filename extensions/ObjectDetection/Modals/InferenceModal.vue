@@ -11,21 +11,22 @@
     >
       <div class="display-screen">
         <div class="bboxes">
-          <div v-for="(box,i) in bbox" 
-            :key="i" 
-            class="bbox" 
+          <div v-for="(box,i) in bbox"
+            :key="i"
+            class="bbox"
             :style="{left: box.x1+'px', top : box.y1+'px', width:(box.x2-box.x1)+'px',height:(box.y2-box.y1)+'px'}"
           >
           <span class="label-box">{{box.label}} : {{box.prob.toFixed(2)}}</span>
           </div>
         </div>
-        <image-capture 
+        <image-capture
           :width="435"
-          source="" 
-          ref="camera" 
-          @started="_=>(cameraReady=true)" 
+          source=""
+          ref="camera"
+          :simulator="false"
+          @started="_=>(cameraReady=true)"
           @stoped="_=>(cameraReady=false)"
-        ></image-capture>  
+        ></image-capture>
       </div>
       <div class="infer_control">
         <b-form-group
@@ -39,7 +40,7 @@
           <b-form-input id="input-threshold" type="number" placeholder="detection threshold ex : 0.5" v-model="threshold" min=0.1 max=0.9 step=0.1></b-form-input>
         </b-form-group>
         <b-avatar button @click="onInfer" :disabled="cameraReady == false" variant="primary" :icon="terminated? 'play-fill':'stop-fill'" class="align-baseline"></b-avatar>
-        
+
       </div>
     </b-modal>
 </template>

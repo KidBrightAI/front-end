@@ -69,17 +69,17 @@
 
 <script>
 import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
-import { Multipane, MultipaneResizer } from "vue-multipane";
+
 import MLModelDesigner from "~/components/MLModelDesign.vue";
 import SyncProjectModal from "~/components/Modals/SyncProjectModal.vue";
 import ServerReport from "~/components/ServerReport.vue";
 import InferenceModal from "../Modals/InferenceModal.vue";
 import axios from "axios";
+import { Multipane, MultipaneResizer } from "vue-multipane";
 export default {
   name: "Train",
   components: {
-    Multipane,
-    MultipaneResizer,
+    Multipane, MultipaneResizer,
     SyncProjectModal,
     MLModelDesigner,
     ServerReport,

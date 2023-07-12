@@ -12,6 +12,7 @@ const createNode = (config) => {
   for (let input of config.input || []) {
     node.addInputInterface(input.name, "", input.default, {
       accept: input.accept,
+      type: input.type,
     });
   }
   for (let opt of config.options || []) {
@@ -27,6 +28,8 @@ const createNode = (config) => {
       node.addOption(opt.name, "CheckboxOption", opt.default, null);
     } else if (opt.type == "input") {
       node.addOption(opt.name, "InputOption", opt.default, null);
+    } else if (opt.type == "text") {
+      node.addOption(opt.name, "TextOption", opt.default, null);
     }
   }
   node.onCalculate((n) => {
@@ -60,7 +63,7 @@ const createNode = (config) => {
     if (config.output) {
       n.getInterface(config.output[0].name).value = outputValue;
     }
-    if (n.name == "output" || n.name == "Output") {
+    if (n.name == "output" || n.name == "Output" || n.name.includes("Output")) {
       n.output = outputValue;
       return outputValue;
     }

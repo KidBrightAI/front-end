@@ -5,7 +5,7 @@
     <div class="left-bottom-content d-flex flex-fill position-relative">
       <div class="header-left-bar">
         <div class="proj-name">
-          {{ project.name || 'ยังไม่ได้เลือกโปรเจค' }}
+          {{ project.name || 'สร้างหรือเลือกโปรเจคใหม่' }}
         </div>
         <div class="proj-type">
           Type : {{ project.projectTypeTitle || '-' }}

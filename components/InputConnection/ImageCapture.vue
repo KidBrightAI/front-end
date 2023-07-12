@@ -11,7 +11,7 @@
         @click="nextCamera"
       ></b-avatar>
     </div>
-    
+
     <div v-if="deviceType == 'STREAM'">
       <b-img
         ref="displayImage"
@@ -21,16 +21,18 @@
       >
       </b-img>
     </div>
-    <vue-web-cam
-        v-show="deviceType != 'STREAM'"
-        :width="width"
-        height="auto"
-        ref="webcam"
-        @cameras="onCameras"
-        @started="onStarted"
-        @stopped="onStoped"
-        :deviceId="captureDevice"
-    />
+    <div class="video-container">
+      <vue-web-cam
+          v-show="deviceType != 'STREAM'"
+          :width="width"
+          :height="height"
+          ref="webcam"
+          @cameras="onCameras"
+          @started="onStarted"
+          @stopped="onStoped"
+          :deviceId="captureDevice"
+      />
+    </div>
   </div>
 </template>
 <script>
@@ -44,8 +46,12 @@ export default {
       default: "",
     },
     width: {
-      type: Number,
+      type: [String, Number],
       default: 260,
+    },
+    height: {
+      type: [String, Number],
+      default: '100%',
     },
     simulator : {
       type : Boolean,
@@ -117,8 +123,8 @@ export default {
         "change camera to : ",
         this.captureDevices[this.currentCaptureDeviceIndex]
       );
-      // webcam 
-      if(this.deviceType == "WEBCAM"){  
+      // webcam
+      if(this.deviceType == "WEBCAM"){
         this.$refs.webcam.changeCamera(
           this.captureDevices[this.currentCaptureDeviceIndex]
         );
@@ -202,6 +208,17 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.video-container {
+  position: relative;
+}
+.cam-overlay{
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
 .config-camera-float-button {
   display: inline;
   position: absolute;

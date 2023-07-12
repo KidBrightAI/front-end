@@ -26,6 +26,7 @@ export default {
     this.intfTypePlugin.addType("number", "#00FF00");
     this.intfTypePlugin.addType("string", "#00FFFF");
     this.intfTypePlugin.addType("tensor", "#FFFFFF");
+    this.intfTypePlugin.addType("array", "#FF00FF");
     this.viewPlugin.enableMinimap = false;
     // add node to editor
     for(let n of this.$nodes){
@@ -33,14 +34,16 @@ export default {
         this.editor.registerNodeType(n.config.name, n.node, n.category);
       }else{
         this.editor.registerNodeType(n.config.name, n.node);
-      } 
+      }
     }
     let model = JSON.parse(JSON.stringify(this.$store.getters["project/getModel"]));
     let res = this.editor.load(model);
-    this.engine.events.calculated.addListener(this,(result)=>{
+    this.engine.events.calculated.addListener(this, (result) => {
       let source = "";
       for (const v of result.values()) {
-          source += v.join("\n",v);
+        if (v) {
+          source += v.join("\n", v);
+        }
       }
       if(this.code != source){
         this.code = source;
@@ -76,7 +79,7 @@ export default {
     },
     onReset: async function(){
 
-      let extensionId = this.$store.state.project.project.extension.id; 
+      let extensionId = this.$store.state.project.project.extension.id;
       let targetExtension = this.$extensions.find(el=>el.id == extensionId);
       let model = JSON.parse(JSON.stringify(targetExtension.model));
       this.editor.load(model);
@@ -86,6 +89,11 @@ export default {
   },
 }
 </script>
+<style>
+.dark-context-menu{
+  width: 150px;
+}
+</style>
 <style scoped>
   .hint {
       position: absolute;

@@ -80,6 +80,7 @@ export default {
       "saveModelLabel"
     ]),
     handleTrain: async function () {
+      await tf.setBackend('webgl');
       if (this.project.model.code.includes("knn")) {
         this.isTraining = true;
         this.isTrained = false;

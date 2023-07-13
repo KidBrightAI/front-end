@@ -109,6 +109,7 @@ export default {
     // add simulator device
   },
   async mounted() {
+    await tf.setBackend('webgl');
     const model = handPoseDetection.SupportedModels.MediaPipeHands;
     const detectorConfig = {
       runtime: 'mediapipe', // or 'tfjs'

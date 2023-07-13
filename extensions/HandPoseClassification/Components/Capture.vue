@@ -127,8 +127,7 @@ export default {
         let res = await this.addData(data);
       } else {
         let { image, thumbnail, width, height, keypoints, handedness } = await this.$refs.camera.snap();
-        console.log(keypoints);
-        console.log(handedness);
+
         let data = {
           id: this.$helper.randomString(16),
           thumbnail: thumbnail,

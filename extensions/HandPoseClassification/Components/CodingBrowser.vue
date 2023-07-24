@@ -94,6 +94,7 @@ export default {
         if(event.data.data == "IMAGE"){
           //////////////////////////////////
           let keypoints = this.$refs.streamer.getSerializedKeypoint();
+          console.log(keypoints);
           //////////////////////////////////
           this.worker.postMessage({command : "RESPONSE", subcommand : "IMAGE", data: keypoints});
         }

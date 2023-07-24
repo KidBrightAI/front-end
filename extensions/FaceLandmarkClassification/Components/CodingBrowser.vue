@@ -17,7 +17,7 @@
             :captureKey="false"
             v-slot="instance"
           >
-            <image-capture-with-pose-detection ref="streamer" :source="instance" :simulator="false"></image-capture-with-pose-detection>
+            <image-capture-with-facelandmark-detection ref="streamer" :source="instance" :simulator="false"></image-capture-with-facelandmark-detection>
           </simulator-input-source-controller>
         </div>
         <div class="bottom-bar">
@@ -49,7 +49,7 @@ import { FitAddon } from "xterm-addon-fit";
 import "xterm/css/xterm.css";
 import axios from "axios";
 import ImageSourceStreamer from "~/components/InputConnection/ImageSourceStreamer.vue";
-import ImageCaptureWithPoseDetection from "~/components/InputConnection/ImageCaptureWithPoseDetection.vue";
+import ImageCaptureWithFacelandmarkDetection from "~/components/InputConnection/ImageCaptureWithFacelandmarkDetection.vue";
 import runner from "../facelandmark.worker.js";
 
 export default {
@@ -58,7 +58,7 @@ export default {
     BlocklyCode,
     SimulatorInputSourceController,
     ImageSourceStreamer,
-    ImageCaptureWithPoseDetection
+    ImageCaptureWithFacelandmarkDetection
   },
   data() {
     return {

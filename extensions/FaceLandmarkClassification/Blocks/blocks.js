@@ -17,7 +17,7 @@ export default (Blockly, that) => {
 
   Blockly.Blocks["tfjs_classification_classify"] = {
     init: function () {
-      this.appendDummyInput().appendField("classify pose");
+      this.appendDummyInput().appendField("classify face landmark");
       this.setPreviousStatement(true, null);
       this.setNextStatement(true, null);
       this.setColour(230);

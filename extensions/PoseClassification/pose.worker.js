@@ -61,6 +61,9 @@ const initModel = async function () {
 
 const classify = async function () {
   __image = await requestData("IMAGE");
+  if (!__image) {
+    return;
+  }
   let __image_tensor = await tf.tensor(__image);
   __data = await __classify(__image_tensor);
 };

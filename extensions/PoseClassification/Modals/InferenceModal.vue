@@ -50,24 +50,22 @@ export default {
   components: {
     ImageCaptureWithPoseDetection,
   },
+  props:{
+    classifier: {
+      type: Object,
+      default: null,
+    },
+  },
   data() {
     return {
       terminated: true,
       cameraReady: false,
       result: "-",
       prob: 0,
-      classifier: null,
       labels: [],
     };
   },
   computed: {
-    ...mapState("server", [
-      "url",
-      "isConnected",
-      "isTraining",
-      "isTerminating",
-      "isTrained",
-    ]),
     ...mapState("project", ["project"]),
     ...mapState("dataset", ["dataset"]),
   },
@@ -75,17 +73,17 @@ export default {
 
   },
   methods: {
-    initClassifier: function () {
-      //----- create classifier ------//
-      if (this.project.model.code.includes("knn")) {
-        this.classifier = knnClassifier.create();
-        this.classifier.clearAllClasses();
-        //load model
-        for (let item of this.dataset.data) {
-          this.classifier.addExample(tf.tensor(item.keypoints), item.class);
-        }
-      }
-    },
+    // initClassifier: function () {
+    //   //----- create classifier ------//
+    //   if (this.project.model.code.includes("knn")) {
+    //     this.classifier = knnClassifier.create();
+    //     this.classifier.clearAllClasses();
+    //     //load model
+    //     for (let item of this.dataset.data) {
+    //       this.classifier.addExample(tf.tensor(item.keypoints), item.class);
+    //     }
+    //   }
+    // },
     doInference: async function () {
       if (this.terminated) {
         return;
@@ -108,11 +106,12 @@ export default {
       return await this.doInference();
     },
     onInfer: async function () {
+      if (this.classifier == null) {
+        console.log("classifier is null")
+        return;
+      }
       this.terminated = !this.terminated;
       console.log("terminated : ", this.terminated);
-      if (this.classifier == null) {
-        this.initClassifier();
-      }
       if (!this.terminated) {
         await this.doInference();
       }

@@ -53,11 +53,11 @@
 import * as faceLandmarksDetection from "@tensorflow-models/face-landmarks-detection";
 //import TRIANGULATION from "@engine/utils/triangulation";
 
-// const NUM_KEYPOINTS = 468;
-// const NUM_IRIS_KEYPOINTS = 5;
-// const GREEN = '#32EEDB';
-// const RED = '#FF2C35';
-// const BLUE = '#157AB3';
+const NUM_KEYPOINTS = 468;
+const NUM_IRIS_KEYPOINTS = 5;
+const GREEN = '#32EEDB';
+const RED = '#FF2C35';
+const BLUE = '#157AB3';
 
 import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
 
@@ -135,7 +135,7 @@ export default {
     },
   },
   methods: {
-    getPose() {
+    getFace() {
       return this.currentFace;
     },
     getSerializedKeypoint() {
@@ -178,7 +178,7 @@ export default {
             this.clearOverlay();
             this.currentFace = null;
           }
-          await this.delay(50);
+          await this.delay(5);
         } catch (err) {
           console.log(err);
           await this.delay(1000);
@@ -216,8 +216,51 @@ export default {
       }
     },
 
-    drawResults(ctx, face, triangulateMesh, boundingBox) {
+    drawResults(ctx, face) {
+      const keypoints =
+        face.keypoints.map((keypoint) => [keypoint.x, keypoint.y]);
 
+      ctx.fillStyle = GREEN;
+      for (let i = 0; i < NUM_KEYPOINTS; i++) {
+        const x = keypoints[i][0];
+        const y = keypoints[i][1];
+
+        ctx.beginPath();
+        ctx.arc(x, y, 1 /* radius */, 0, 2 * Math.PI);
+        ctx.fill();
+      }
+      if (keypoints.length > NUM_KEYPOINTS) {
+        ctx.strokeStyle = RED;
+        ctx.lineWidth = 1;
+
+        const leftCenter = keypoints[NUM_KEYPOINTS];
+        const leftDiameterY =
+            distance(keypoints[NUM_KEYPOINTS + 4], keypoints[NUM_KEYPOINTS + 2]);
+        const leftDiameterX =
+            distance(keypoints[NUM_KEYPOINTS + 3], keypoints[NUM_KEYPOINTS + 1]);
+
+        ctx.beginPath();
+        ctx.ellipse(
+            leftCenter[0], leftCenter[1], leftDiameterX / 2, leftDiameterY / 2, 0,
+            0, 2 * Math.PI);
+        ctx.stroke();
+
+        if (keypoints.length > NUM_KEYPOINTS + NUM_IRIS_KEYPOINTS) {
+          const rightCenter = keypoints[NUM_KEYPOINTS + NUM_IRIS_KEYPOINTS];
+          const rightDiameterY = distance(
+              keypoints[NUM_KEYPOINTS + NUM_IRIS_KEYPOINTS + 2],
+              keypoints[NUM_KEYPOINTS + NUM_IRIS_KEYPOINTS + 4]);
+          const rightDiameterX = distance(
+              keypoints[NUM_KEYPOINTS + NUM_IRIS_KEYPOINTS + 3],
+              keypoints[NUM_KEYPOINTS + NUM_IRIS_KEYPOINTS + 1]);
+
+          ctx.beginPath();
+          ctx.ellipse(
+              rightCenter[0], rightCenter[1], rightDiameterX / 2,
+              rightDiameterY / 2, 0, 0, 2 * Math.PI);
+          ctx.stroke();
+        }
+      }
     },
     onCameras(devices) {
       this.captureDevices = [
@@ -261,7 +304,7 @@ export default {
       this.ctx = null;
     },
     async snap() {
-      let image = await this.captureWithPose();
+      let image = await this.captureWithFaceLandmark();
       return image;
     },
     canvasToBlob(canvas, format = "image/jpeg", quality = 0.8) {
@@ -280,11 +323,11 @@ export default {
       });
     },
     serializeKeypoint(keypoints) {
-      if (keypoints.length !== 17) {
+      if (keypoints.length !== NUM_KEYPOINTS) {
         return null;
       }
       let ret = [];
-      for (let i = 1; i < 17; i++) {
+      for (let i = 1; i < NUM_KEYPOINTS; i++) {
         let distX = keypoints[0].x - keypoints[i].x;
         let distY = keypoints[0].y - keypoints[i].y;
         ret.push(distX);
@@ -292,7 +335,7 @@ export default {
       }
       return ret;
     },
-    async captureWithPose() {
+    async captureWithFaceLandmark() {
       let src, width, height;
       if (this.deviceType == "WEBCAM") {
         src = this.$refs.webcam.$refs.video;
@@ -313,18 +356,14 @@ export default {
       const { ctx, canvas } = this;
       ctx.drawImage(src, 0, 0, canvas.width, canvas.height);
       let serialized = null;
-      let poseId = 0;
-      if (this.currentPose) {
-        serialized = this.serializeKeypoint(this.currentPose.keypoints);
-        poseId = this.currentPose.id;
-        this.drawKeypoints(ctx, this.currentPose.keypoints);
-        this.drawSkeleton(ctx, this.currentPose.keypoints, this.currentPose.id);
+      if (this.currentFace) {
+        serialized = this.serializeKeypoint(this.currentFace.keypoints);
+        this.drawResults(ctx, this.currentFace);
       }
       let image = await this.canvasToBlob(canvas);
       return {
         image: image,
         keypoints: serialized,
-        poseId: poseId,
         thumbnail: null,
         width: canvas.width,
         height: canvas.height,

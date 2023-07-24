@@ -21,16 +21,31 @@
         </b-button>
       </b-input-group-append>
     </b-input-group>
-    <div
-      class="test"
-      style="height:calc(100vh - 80px)"
-      @mousedown.stop
-    >
-      <MLModelDesigner></MLModelDesigner>
-    </div>
 
-    <sync-project-modal></sync-project-modal>
-    <inference-modal></inference-modal>
+    <multipane layout="horizontal" class="horizontal-panes multplane">
+      <div
+        class="test"
+        :style="{ height: '70%', maxHeight: '90%', minHeight: '10%' }"
+        @mousedown.stop
+      >
+        <MLModelDesigner></MLModelDesigner>
+      </div>
+      <multipane-resizer></multipane-resizer>
+      <div :style="{ display: 'flex', flexGrow: 1, width: '100%' }">
+        <b-tabs card class="tab-flex w-100" content-class="grow-container">
+          <b-tab title="Message Logs" style="padding : 0px; width: 100%;">
+            <div class="monitor-console">
+              <ol ref="monitor" class="monitor-line">
+                <li v-for="(line,inx) in message" :key="inx" class="serial-line" :style="[line.includes('Error') ? {'color':'orangered'} : {}]">
+                  {{line}}
+                </li>
+              </ol>
+            </div>
+          </b-tab>
+        </b-tabs>
+      </div>
+    </multipane>
+    <inference-modal :classifier="classifier"></inference-modal>
   </div>
 </template>
 
@@ -64,7 +79,8 @@ export default {
       isTerminating: false,
       isDownloading: false,
       isConverting: false,
-      classifier : null,
+      classifier: null,
+      message:[],
     };
   },
   computed: {
@@ -103,14 +119,27 @@ export default {
       // }
     },
     train: function () {
+      this.message = ["Start training..."];
       return new Promise((resolve, reject) => {
-        for (let item of this.dataset.data) {
-          this.classifier.addExample(tf.tensor(item.keypoints), item.class);
+        for(let i = 0; i < this.dataset.data.length; i++){
+          this.message.push(`Training step ${i+1}/${this.dataset.data.length} : [${this.dataset.data[i].class}] to classifier`);
+          this.classifier.addExample(tf.tensor(this.dataset.data[i].keypoints), this.dataset.data[i].class);
         }
+        this.message.push("Training completed");
         resolve();
       })
     },
     handleInference: function () {},
+  },
+  watch:{
+    message(){
+      let m = this.$refs.monitor;
+      if (m) {
+        this.$nextTick(_ => {
+          m.scrollIntoView(false);// = m.scrollHeight;
+        });
+      }
+    }
   },
   mounted() {
 
@@ -118,9 +147,9 @@ export default {
 
 };
 </script>
-
 <style lang="scss" scoped>
 $primary-color: #007e4e;
+
 .horizontal-panes {
   width: 100%;
   height: calc(100vh - 80px);
@@ -158,5 +187,28 @@ $primary-color: #007e4e;
   &:disabled {
     opacity: 0.7;
   }
+}
+
+ol{
+  list-style-type: none;
+  counter-reset: elementcounter;
+  padding-left: 0;
+}
+li:before{
+  content: "  ";
+  /* content: counter(elementcounter) " |"; */
+  /* counter-increment:elementcounter; */
+  font-weight: bold;
+}
+.monitor-line{
+  padding-left: 10px;
+}
+.monitor-console {
+  width: 100%;
+  height: 100%;
+  background-color: #363636;
+  color: white;
+  position: absolute;
+  overflow-y: auto;
 }
 </style>

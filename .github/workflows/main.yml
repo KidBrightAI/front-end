@@ -10,7 +10,7 @@ jobs:
     env:
       # We used "docs" as directory name for our documentation, we will be referencing this later
       working-directory: ./
-      API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+      SSH_DEPLOY_KEY: ${{ secrets.API_TOKEN_GITHUB }}
     strategy:
       matrix:
         os: [ubuntu-latest]

@@ -2,7 +2,7 @@ name: build-dist
 
 # define the trigger 
 # on: [push, pull_request]
-on: [workflow_dispatch]
+on: [workflow_dispatch, push]
 
 jobs:
   build-dist:

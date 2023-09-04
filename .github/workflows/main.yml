@@ -10,7 +10,6 @@ jobs:
     env:
       # We used "docs" as directory name for our documentation, we will be referencing this later
       working-directory: ./
-      SSH_DEPLOY_KEY: ${{ secrets.API_TOKEN_GITHUB }}
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -37,13 +36,24 @@ jobs:
       - name: Generate
         working-directory: ${{env.working-directory}}
         run: npm run generate
-      
+
       - name: Release
-        uses: dmnemec/copy_file_to_another_repo_action@main
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.API_TOKEN_GITHUB }}
         with:
-          source_file: './dist'
-          destination_repo: 'KidBrightAI/KidBrightAI.github.io'
-          destination_folder: '/'
-          user_email: 'listzone@hotmail.com'
-          user_name: 'comdet'
-          commit_message: 'release from actions'
+          source-directory: 'dist'
+          destination-github-username: 'KidBrightAI'
+          destination-repository-name: 'KidBrightAI.github.io'
+          user-email: 'listzone@hotmail.com'
+          target-branch: main
+          
+      # - name: Release
+      #   uses: dmnemec/copy_file_to_another_repo_action@main
+      #   with:
+      #     source_file: './dist'
+      #     destination_repo: 'KidBrightAI/KidBrightAI.github.io'
+      #     destination_folder: '/'
+      #     user_email: 'listzone@hotmail.com'
+      #     user_name: 'comdet'
+      #     commit_message: 'release from actions'

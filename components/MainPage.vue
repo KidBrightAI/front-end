@@ -9,7 +9,7 @@
         <extension-async-component v-else-if="selectedMenu === 4 && project.extension" :target="project.extension.components.Coding"></extension-async-component>
         <div v-else class="w-100 h-100">
           <b-img style="margin-top: 100px" width="500px" src="~/assets/images/UI/png/Mask Group 12.png" center></b-img>
-          <span style="margin-top: 50px; display: block;text-align: center;font-size: 25px;"> สร้างโปรเจคใหม่ หรือ เลือกเมนูด้านซ้ายมือ</span>
+          <span style="margin-top: 50px; display: block;text-align: center;font-size: 25px;"> สร้างโปรเจคใหม่ หรือ เลือกกดเมนูด้านซ้ายมือ</span>
         </div>
       </div>
     </div>
@@ -31,9 +31,9 @@ import SavingProject from './Modals/SavingProject.vue';
 import ConnectWifiModal from "./Modals/ConnectWifiModal.vue";
 
 export default {
-  components: { 
-    MainPanel, 
-    NewProjectModal, 
+  components: {
+    MainPanel,
+    NewProjectModal,
     OpenProjectModal,
     DeleteProjectModal,
     ExtensionAsyncComponent,

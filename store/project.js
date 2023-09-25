@@ -12,6 +12,7 @@ export const state = () => ({
     labelFile: "",
     modelLabel: [],
     labels: "",
+    trained: false,
     pretrained: "",
     tfjs: "",
     edgetpu: "",
@@ -85,6 +86,9 @@ export const mutations = {
   saveWorkspace(state, ws) {
     state.project.workspace = ws;
   },
+  setTrained(state, trained) {
+    state.project.trained = trained;
+  }
 };
 export const getters = {
   getLabels: (state) => {

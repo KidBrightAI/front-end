@@ -90,7 +90,7 @@ export default {
     ...mapActions(["saveProject"]),
     ...mapMutations("project", [
       "savePretrained",
-      "saveTfjs",
+      "setTrained",
       "saveEdgeTPU",
       "saveModelLabel"
     ]),
@@ -102,7 +102,7 @@ export default {
         this.classifier.clearAllClasses();
         await this.train();
         let labels = Object.keys(this.classifier.getClassExampleCount());
-        this.saveTfjs("knn");
+        this.setTrained(true);
         this.saveModelLabel(labels);
         this.isTraining = false;
         this.isTrained = true;

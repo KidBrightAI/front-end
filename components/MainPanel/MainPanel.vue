@@ -92,7 +92,7 @@
         <li
           :class="{
             current: selectedMenu == 4,
-            inactive: currentDevice == 'BROWSER' && !project.tfjs,
+            inactive: currentDevice == 'BROWSER' && !project.tfjs && !project.trained,
           }"
           @click="
               handleTabChange(4);

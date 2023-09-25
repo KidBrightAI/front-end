@@ -100,6 +100,7 @@ export const actions = {
   async saveProject({ commit, dispatch, state, rootState }) {
     commit("setSaving", true);
     commit("setSavingProgress", 0);
+    console.log("saving project");
     let that = this;
     if (state.currentDevice == "BROWSER") {
       let zip = new JSZip();

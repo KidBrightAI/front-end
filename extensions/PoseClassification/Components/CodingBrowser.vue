@@ -66,7 +66,8 @@ export default {
       isRunning: false,
       worker: null,
       toolbox: Toolbox,
-      block: Blocks
+      block: Blocks,
+      mqttClient: null,
     };
   },
   methods: {
@@ -101,6 +102,44 @@ export default {
         this.term.write(event.data.msg);
         this.isRunning = false;
         this.stop();
+      }else if(event.data.command=="MQTT_CONNECT"){
+        var that = this;
+        if(this.mqttClient != null){
+          this.mqttClient.end();
+        }
+        this.mqttClient = mqtt.connect(event.data.host, {
+          port: event.data.port,
+          clientId: event.data.clientId,
+          username: event.data.username,
+          password: event.data.password,
+        });
+        this.mqttClient.on("connect", function () {
+          console.log("MQTT Connected");
+          that.worker.postMessage({command : "EVENT", subcommand : "MQTT_ON_CONNECT", data: "MQTT Connected"});
+        });
+        this.mqttClient.on("error", function (error) {
+          console.log("MQTT Error : ", error);
+          that.worker.postMessage({command : "EVENT", subcommand : "MQTT_ERROR", data: error});
+        });
+        this.mqttClient.on("message", function (topic, message) {
+          //message is Uint8Array convert to string
+          message = String.fromCharCode.apply(null, message);
+          that.worker.postMessage({command : "EVENT", subcommand : "MQTT_ON_MESSAGE", data: {topic : topic, message : message}});
+        });
+        this.mqttClient.on("close", function () {
+          console.log("MQTT Close");
+          that.worker.postMessage({command : "EVENT", subcommand : "MQTT_CLOSE", data: "MQTT Close"});
+        });
+      }else if(event.data.command=="MQTT_PUBLISH"){
+        this.mqttClient.publish(event.data.topic, event.data.message + "");
+      }else if(event.data.command=="MQTT_SUBSCRIBE"){
+        this.mqttClient.subscribe(event.data.topic);
+      }else if(event.data.command=="MQTT_UNSUBSCRIBE"){
+        this.mqttClient.unsubscribe(event.data.topic);
+      }else if(event.data.command=="MQTT_DISCONNECT"){
+        this.mqttClient.end();
+      }else if(event.data.command=="MQTT_IS_CONNECTED"){
+        this.worker.postMessage({command : "RESPONSE", subcommand : "MQTT_IS_CONNECTED", data: this.mqttClient.connected});
       }
     },
     onWorkerError(err){

@@ -291,9 +291,20 @@ export default `<xml>
   </category>
 
   <category name="Variables" categorystyle="variable_category" custom="VARIABLE"></category>
-  
+
   <category name="Functions" categorystyle="procedure_category" custom="PROCEDURE"></category>
-  
+
+  <category name="MQTT" colour="#5ba5a5">
+    <block type="mqtt_config"></block>
+    <block type="mqtt_on_connected"></block>
+    <block type="mqtt_is_connect"></block>
+    <block type="mqtt_publish"></block>
+    <block type="mqtt_subscribe"></block>
+    <block type="mqtt_get_topic"></block>
+    <block type="mqtt_get_number"></block>
+    <block type="mqtt_get_text"></block>
+  </category>
+
   <category name="Kidbright Bot" colour="%{BKY_LOOPS_HUE}">
     <block type="delay"></block>
     <block type="tfjs_classification_init_model"></block>
@@ -301,9 +312,9 @@ export default `<xml>
     <block type="tfjs_classification_get_class_name"></block>
     <block type="tfjs_classification_get_class_index"></block>
     <block type="tfjs_classification_get_class_prob"></block>
-    
+
     <label text="Simulator Robot" web-class="ioLabel"></label>
-    
+
     <block type="move"></block>
     <block type="move_forward_in">
       <value name="speed">

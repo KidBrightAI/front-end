@@ -1,5 +1,6 @@
 importScripts("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs");
 
+let mqttClient = null;
 let processing = false;
 let sourceCode = "";
 
@@ -10,6 +11,7 @@ let __data = null;
 let __maxIndex = 0;
 
 let responseCallback = null;
+let eventCallback = [];
 let requestCommand = null;
 
 const requestData = async function (cmd, addition) {
@@ -22,6 +24,17 @@ const requestData = async function (cmd, addition) {
   let responseCommand = new Promise((resolve) => (responseCallback = resolve));
   let res = await responseCommand;
   return res;
+};
+
+const registerCallback = async function (cmd, callback) {
+  eventCallback.push({
+    name: cmd,
+    callback: callback,
+  });
+};
+
+const unregisterCallback = async function (cmd) {
+  eventCallback = eventCallback.filter((c) => c.name != cmd);
 };
 
 const loadingModel = async function () {
@@ -101,6 +114,15 @@ onmessage = async (event) => {
   } else if (event.data.command == "RESPONSE") {
     if (event.data.subcommand == requestCommand) {
       responseCallback(event.data.data);
+    }
+  } else if (event.data.command == "EVENT"){
+    let callbacks = eventCallback.filter((c) => c.name == event.data.subcommand);
+    for (let callback of callbacks) {
+      if (callback.callback.constructor.name == "AsyncFunction") {
+        await callback.callback(event.data.data);
+      } else {
+        callback.callback(event.data.data);
+      }
     }
   }
 };

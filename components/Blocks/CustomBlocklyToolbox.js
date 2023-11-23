@@ -33,7 +33,6 @@ export default class CustomCategory extends Blockly.ToolboxCategory {
   }
 
   createIconDom_() {
-    console.log(this.name_);
     const iconImg = document.createElement("img");
     //url("/_nuxt/assets/images/UI/png/Group 187.png");
 

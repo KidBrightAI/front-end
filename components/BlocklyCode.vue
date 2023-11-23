@@ -56,7 +56,7 @@ export default {
     Blockly.registry.register(
       Blockly.registry.Type.TOOLBOX_ITEM,
       Blockly.ToolboxCategory.registrationName,
-      CustomCategory, 
+      CustomCategory,
       true
     );
     BlocklyPythonGenerator(Blockly, this);
@@ -120,7 +120,7 @@ export default {
         var xml = Blockly.Xml.domToText(
           Blockly.Xml.workspaceToDom(Blockly.mainWorkspace)
         );
-        console.log(sourceCode);
+        //console.log(sourceCode);
         this.saveCode(sourceCode);
         this.saveWorkspace(xml);
       }

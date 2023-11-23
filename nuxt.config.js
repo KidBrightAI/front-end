@@ -33,6 +33,10 @@ export default {
         src: "https://cdn.jsdelivr.net/npm/roslib@1/build/roslib.min.js",
         type: "text/javascript",
       },
+      {
+        src: "https://unpkg.com/mqtt@5.3.0/dist/mqtt.min.js",
+        type: "text/javascript",
+      }
     ],
   },
   css: ["~/assets/css/styles.scss"],

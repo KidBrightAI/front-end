@@ -197,20 +197,25 @@ export default {
       }
     },
     async getLabels() {
-      let url = new URL(this.project.labelFile.replace("filesystem:",""));
-      url.host = document.location.host;
-      url.protocol = document.location.protocol;
-      url.port = document.location.port;
-      let modelLabels = "filesystem:"+url.href;
-      const __label_res = await axios.get(modelLabels);
-      const __labels_text = __label_res.data;
-      let labels = __labels_text
-        .replaceAll("\r", "")
-        .split("\n")
-        .map((el) => el.trim())
-        .filter((el) => el);
-      console.log(labels);
-      return labels;
+      try{
+        let url = new URL(this.project.labelFile.replace("filesystem:",""));
+        url.host = document.location.host;
+        url.protocol = document.location.protocol;
+        url.port = document.location.port;
+        let modelLabels = "filesystem:"+url.href;
+        const __label_res = await axios.get(modelLabels);
+        const __labels_text = __label_res.data;
+        let labels = __labels_text
+          .replaceAll("\r", "")
+          .split("\n")
+          .map((el) => el.trim())
+          .filter((el) => el);
+        console.log(labels);
+        return labels;
+      }catch(err){
+        console.log(err);
+        return [];
+      }
     },
     run : async function() {
       this.term.write("Running ...\r\n");

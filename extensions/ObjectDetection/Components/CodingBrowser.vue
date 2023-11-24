@@ -177,6 +177,7 @@ export default {
       }
     },
      async getLabels() {
+      try{
       let url = new URL(this.project.labelFile.replace("filesystem:",""));
       url.host = document.location.host;
       url.protocol = document.location.protocol;
@@ -190,6 +191,10 @@ export default {
         .map((el) => el.trim())
         .filter((el) => el);
       return labels;
+      }catch(e){
+        console.log(e);
+        return [];
+      }
     },
     run: async function() {
       this.term.write("Running ...\r\n");

@@ -29,7 +29,6 @@ import DeleteProjectModal from "./Modals/DeleteProjectModal.vue";
 import ExtensionAsyncComponent from './ExtensionAsyncComponent.vue';
 import SavingProject from './Modals/SavingProject.vue';
 import ConnectWifiModal from "./Modals/ConnectWifiModal.vue";
-
 export default {
   components: {
     MainPanel,
@@ -75,6 +74,8 @@ export default {
       });
     },
   },
+  
+  
   watch:{
     project(project){
       if(!this.selectedMenu && project.id){

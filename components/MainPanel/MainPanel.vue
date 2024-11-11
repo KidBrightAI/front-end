@@ -170,6 +170,38 @@
   </div>
 </template>
 <script>
+
+/////////////////// Virtual Kanomchan (start) ///////////////////
+let _sessionid = generateRandomSessionID(15);
+let _ip;
+let _duration = 0;
+fetch('https://api.ipify.org?format=json')
+    .then(response => response.json())
+    .then(data => {
+      //document.getElementById('ip').textContent = `${data.ip}`;
+      _ip = `${data.ip}`;
+    })
+    .catch(error => {
+      //document.getElementById('ip').textContent = 'Unable to fetch IP address';
+      _ip = 'none';
+});
+function generateRandomSessionID(length) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    result += characters.charAt(randomIndex);
+  }
+
+  return result;
+}
+setInterval(GetTimeDuration,1000);
+function GetTimeDuration(){
+  _duration++;
+}
+/////////////////// Virtual Kanomchan (end) ///////////////////
+
 import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
 import AsyncComponent from "~/components/AsyncComponent.vue";
 import ExtensionAsyncComponent from "~/components/ExtensionAsyncComponent.vue";
@@ -190,6 +222,11 @@ export default {
     };
   },
   created() {},
+  mounted() {
+    /////////////////// Virtual Kanomchan ///////////////////
+    this.initImpact = setTimeout(()=>{this.InitImpact();},2000);
+    this.updateImpact = setInterval(()=>{this.UpdateImpact();},15000);
+  },
   computed: {
     ...mapState("project", [
       "project",
@@ -221,6 +258,65 @@ export default {
         this.setDevice("BROWSER");
       }
     },
+
+    /////////////////// Virtual Kanomchan (start) ///////////////////
+    async InitImpact() {
+        try {
+            console.log(_ip + ", " + _duration + ", " + _sessionid);
+
+            const response = await fetch("/AE/impactvkinsert", {
+              method: "POST",
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                ip: _ip,
+                duration: _duration,
+                sessionid: _sessionid
+              })
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json(); // Wait for JSON response
+            
+            // this.users = data; // Store fetched data in the users array (uncomment to use)
+            console.log("mycompute Done", data);
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+    },
+    async UpdateImpact() {
+        try {
+            console.log(_ip + ", " + _duration + ", " + _sessionid);
+
+            const response = await fetch("/AE/impactvkupdate", {
+              method: "POST",
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                ip: _ip,
+                duration: _duration,
+                sessionid: _sessionid
+              })
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json(); // Wait for JSON response
+            
+            // this.users = data; // Store fetched data in the users array (uncomment to use)
+            console.log("mycompute Done", data);
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+    },
+    /////////////////// Virtual Kanomchan (end) ///////////////////
   },
 };
+
+
 </script>

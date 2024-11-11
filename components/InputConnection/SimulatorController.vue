@@ -41,6 +41,35 @@
   </div>
 </template>
 <script>
+/*let _sessionid = generateRandomSessionID(15);
+let _ip;
+let _duration = 0;
+fetch('https://api.ipify.org?format=json')
+    .then(response => response.json())
+    .then(data => {
+      //document.getElementById('ip').textContent = `${data.ip}`;
+      _ip = `${data.ip}`;
+    })
+    .catch(error => {
+      //document.getElementById('ip').textContent = 'Unable to fetch IP address';
+      _ip = 'none';
+});
+function generateRandomSessionID(length) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    result += characters.charAt(randomIndex);
+  }
+
+  return result;
+}
+setInterval(GetTimeDuration,1000);
+function GetTimeDuration(){
+  _duration++;
+}*/
+
 import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
 export default {
   props: {
@@ -77,6 +106,9 @@ export default {
         this.onKey.bind(this)
       );
     }
+    //database test
+    //this.initImpact = setTimeout(()=>{this.InitImpact();},2000);
+    //this.updateImpact = setInterval(()=>{this.UpdateImpact();},15000);
   },
   computed: {
     ...mapState(["currentDevice", "initialDevice", "streamUrl"]),
@@ -131,6 +163,61 @@ export default {
     getImageBase64() {
       return this.$refs.gameInstance.contentWindow.ImageBase64();
     },
+    /*async InitImpact() {
+        try {
+            console.log(_ip + ", " + _duration + ", " + _sessionid);
+
+            const response = await fetch("/AE/impactvkinsert", {
+              method: "POST",
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                ip: _ip,
+                duration: _duration,
+                sessionid: _sessionid
+              })
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json(); // Wait for JSON response
+            
+            // this.users = data; // Store fetched data in the users array (uncomment to use)
+            console.log("mycompute Done", data);
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+    },
+    async UpdateImpact() {
+        try {
+            console.log(_ip + ", " + _duration + ", " + _sessionid);
+
+            const response = await fetch("/AE/impactvkupdate", {
+              method: "POST",
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                ip: _ip,
+                duration: _duration,
+                sessionid: _sessionid
+              })
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json(); // Wait for JSON response
+            
+            // this.users = data; // Store fetched data in the users array (uncomment to use)
+            console.log("mycompute Done", data);
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+    },*/
+
     async snap() {
       let image = await this.captureWithTumbnail();
       return image;
@@ -150,6 +237,7 @@ export default {
     },
   },
 };
+
 </script>
 <style scoped>
 .game-container {

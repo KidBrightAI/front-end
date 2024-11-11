@@ -1,7 +1,7 @@
 <template>
-  <div class="game-container">
+  <div class="unity-container">
     <iframe
-      ref="gameInstance"
+      ref="unityInstance"
       width="100%"
       height="505px"
       scorlling="no"

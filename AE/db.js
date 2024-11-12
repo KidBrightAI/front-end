@@ -1,12 +1,25 @@
 const mariadb = require("mariadb");
 
-const pool = mariadb.createPool({
+/*const pool = mariadb.createPool({
   host: "203.185.145.17",
   user: "simulator",       // Replace with your DB user
   password: "3CEZcbqx5cKU",  // Replace with your DB password
   database: "simulator_stat", // Replace with your DB name
   port: 6666,            // Database port (use your actual port here)
   connectionLimit: 5,         // Maximum number of simultaneous connections
+});*/
+const pool = mariadb.createPool({
+  host : process.env.MYSQL_HOST || 'localhost',
+  port : process.env.MYSQL_PORT ? parseInt(process.env.MYSQL_PORT) : 3306, 
+  user : process.env.MYSQL_USER ||'user',
+  password :  process.env.MYSQL_PASSWORD ||'password',
+  database : process.env.MYSQL_DATABASE || 'stat'
+
+  /*host : process.env.MYSQL_HOST || '203.185.145.17',
+  port : process.env.MYSQL_PORT || 6666,
+  user : process.env.MYSQL_USER || 'simulator',
+  password :  process.env.MYSQL_PASSWORD ||'3CEZcbqx5cKU',
+  database : process.env.MYSQL_DATABASE || 'simulator_stat'*/
 });
 
 

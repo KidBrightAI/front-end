@@ -55,10 +55,10 @@ export default async function (req, res) {
       try {
         //const val = JSON.parse(req.body);
         //const { ip, duration, sessionid } = await req.json();
-        console.log(".................req..................");
+        //console.log(".................req..................");
         const bodyPayload = await bodyParser(req);
-        console.log('Body Payload:', bodyPayload);
-        console.log(".................req..................");
+        //console.log('Body Payload:', bodyPayload);
+        //console.log(".................req..................");
         //console.log(typeof(req));
         const result = await insertData(bodyPayload['ip'], bodyPayload['duration'], bodyPayload['sessionid']); // Insert into database
         res.writeHead(201, { 'Content-Type': 'application/json' });

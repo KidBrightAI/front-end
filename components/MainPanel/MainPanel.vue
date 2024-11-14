@@ -262,7 +262,7 @@ export default {
     /////////////////// Virtual Kanomchan (start) ///////////////////
     async InitImpact() {
         try {
-            console.log(_ip + ", " + _duration + ", " + _sessionid);
+            //console.log(_ip + ", " + _duration + ", " + _sessionid);
 
             const response = await fetch("/AE/impactvkinsert", {
               method: "POST",
@@ -282,7 +282,7 @@ export default {
             const data = await response.json(); // Wait for JSON response
             
             // this.users = data; // Store fetched data in the users array (uncomment to use)
-            console.log("mycompute Done", data);
+            //console.log("mycompute Done", data);
         } catch (error) {
             console.error("Error fetching user data:", error);
         }
@@ -309,7 +309,7 @@ export default {
             const data = await response.json(); // Wait for JSON response
             
             // this.users = data; // Store fetched data in the users array (uncomment to use)
-            console.log("mycompute Done", data);
+            //console.log("mycompute Done", data);
         } catch (error) {
             console.error("Error fetching user data:", error);
         }

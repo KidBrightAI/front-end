@@ -1,0 +1,20 @@
+- /nuxt.config.json 
+Add serverMiddleware
+  
+- /AE (floder) 
+ add new folder 
+
+- /components/MainPanel/MainPanel.vue 
+Add loop interval in mounted(){}
+Add mycomputed() in methods{} 
+
+- /Dockerfile
+<Change> FROM node:14-alpine as builder <to> FROM node:14-alpine
+<Change> RUN npm run generate <to> RUN npm run build CMD npm run start 
+<Delete> FROM nginx:alpine COPY --from=builder /usr/src/app/dist /usr/share/nginx/html/
+
+- /nuxt.config.js
+<Change> target: "static", <to> target: "server",
+<Uncomment> // server: {
+  //   host: "0.0.0.0", // default: localhost
+  // },

@@ -2,10 +2,10 @@
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
-  // server: {
-  //   host: "0.0.0.0", // default: localhost
-  // },
-  target: "static",
+   server: {
+     host: "0.0.0.0", // default: localhost
+   },
+  target: "server",
   head: {
     title: "kbai",
     htmlAttrs: {

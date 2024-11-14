@@ -51,7 +51,7 @@ async function insertDataImpact(ip, duration, sessionid) {
       message: 'User created',
       id: result.insertId ? result.insertId.toString() : null  // Convert BigInt to string
     };
-    console.log("res",result);
+
     return response;
 
   } catch (err) {
@@ -70,7 +70,7 @@ async function updateDataImpact(ip, duration, sessionid) {
       message: result.affectedRows > 0 ? 'User updated' : 'No matching record found',
       rowsAffected: result.affectedRows
     };
-    console.log("Update result:", result);
+
     return response;
 
   } catch (err) {

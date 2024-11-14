@@ -289,7 +289,7 @@ export default {
     },
     async UpdateImpact() {
         try {
-            console.log(_ip + ", " + _duration + ", " + _sessionid);
+            //console.log(_ip + ", " + _duration + ", " + _sessionid);
 
             const response = await fetch("/AE/impactvkupdate", {
               method: "POST",

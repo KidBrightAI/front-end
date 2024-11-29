@@ -168,18 +168,21 @@
       </div>
     </div>
   </div>
+
 </template>
 <script>
 
 /////////////////// Virtual Kanomchan (start) ///////////////////
-let _sessionid = generateRandomSessionID(15);
-let _ip;
-let _duration = 0;
+export let _sessionid = generateRandomSessionID(15);
+export let _ip;
+export let _duration = 0;
 fetch('https://api.ipify.org?format=json')
     .then(response => response.json())
     .then(data => {
       //document.getElementById('ip').textContent = `${data.ip}`;
       _ip = `${data.ip}`;
+
+      console.log(_ip);
     })
     .catch(error => {
       //document.getElementById('ip').textContent = 'Unable to fetch IP address';
@@ -205,7 +208,6 @@ function GetTimeDuration(){
 import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
 import AsyncComponent from "~/components/AsyncComponent.vue";
 import ExtensionAsyncComponent from "~/components/ExtensionAsyncComponent.vue";
-
 export default {
   components: {
     AsyncComponent,
@@ -218,6 +220,7 @@ export default {
   },
   data() {
     return {
+      parentVariable: 'Shared data from parent',
       exts: this.$extensions,
     };
   },
@@ -227,6 +230,7 @@ export default {
     this.initImpact = setTimeout(()=>{this.InitImpact();},2000);
     this.updateImpact = setInterval(()=>{this.UpdateImpact();},15000);
   },
+
   computed: {
     ...mapState("project", [
       "project",
@@ -240,6 +244,10 @@ export default {
     isOnline() {
       return window.navigator.onLine;
     },
+  },
+  beforeDestroy() {
+    // Clear interval to prevent memory leaks
+    clearInterval(this.UpdateImpact);
   },
   methods: {
     ...mapMutations(["setDevice"]),
@@ -262,7 +270,6 @@ export default {
     /////////////////// Virtual Kanomchan (start) ///////////////////
     async InitImpact() {
         try {
-            //console.log(_ip + ", " + _duration + ", " + _sessionid);
 
             const response = await fetch("/AE/impactvkinsert", {
               method: "POST",
@@ -289,7 +296,6 @@ export default {
     },
     async UpdateImpact() {
         try {
-            //console.log(_ip + ", " + _duration + ", " + _sessionid);
 
             const response = await fetch("/AE/impactvkupdate", {
               method: "POST",
@@ -317,6 +323,6 @@ export default {
     /////////////////// Virtual Kanomchan (end) ///////////////////
   },
 };
-
+//module.exports = { ipFormImpact};
 
 </script>

@@ -7,6 +7,8 @@ const pool = mariadb.createPool({
   password :  process.env.MYSQL_PASSWORD ||'password',
   database : process.env.MYSQL_DATABASE || 'stat'
 
+  
+
 });
 
 async function bodyParser(req) {
@@ -78,10 +80,10 @@ async function updateDataImpact(ip, duration, sessionid) {
     throw err;
   }
 }
-async function insertDataAE(ip, duration, sessionid) {
-  const sql = 'INSERT INTO ae_vk (ip,duration,sessionid) VALUES (?, ?, ?)';
+async function insertDataAE(ip, duration, sessionid, status, objectname, objectid, scenename, sceneid, direction, location, runprogram, appid) {
+  const sql = 'INSERT INTO ae_vk (ip, duration, sessionid, status, objectname, objectid, scenename, sceneid, direction, location, runprogram, appid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
   try {
-    const result = await query(sql, [ip, duration, sessionid]);
+    const result = await query(sql, [ip, duration, sessionid, status, objectname, objectid, scenename, sceneid, direction, location, runprogram, appid]);
 
     //If the result contains a BigInt (e.g., insertId), convert it to a string
     const response = {
@@ -96,4 +98,8 @@ async function insertDataAE(ip, duration, sessionid) {
     throw err;
   }
 }
-module.exports = { insertDataImpact, updateDataImpact, insertDataAE, bodyParser };
+async function ipImpact(){
+
+  return 'userIP';
+}
+module.exports = { insertDataImpact, updateDataImpact, insertDataAE, bodyParser, ipImpact };

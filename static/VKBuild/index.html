@@ -24,7 +24,7 @@
 <p id="LinearDirec">0</p>
 <p id="AngularDirec">0</p>
 
-<p id="DataLog">0</p>
+<p id="DataLog">000 000</p>
 
 </details>
 
@@ -48,6 +48,11 @@
         //x = 1;
         //delay = 99999999;
     //}
+    //setInterval(looptest,1000);
+    function looptest()
+    {
+        console.log(document.getElementById("DataLog").innerHTML);
+    }
     /*fetch('https://api.ipify.org?format=json')
             .then(response => response.json())
             .then(data => {
@@ -88,14 +93,14 @@
     {
         return document.getElementById("ImgBase64").innerHTML;
     }
-    /*function DataLogVK(value)
+    function DataLogVK(value)
     {
         document.getElementById("DataLog").innerHTML = value;
     }
     function DataVK()
     {
         return document.getElementById("DataLog").innerHTML;
-    }*/
+    }
     //function Capture(value)
     //{
         //return document.getElementById("Capture").innerHTML;

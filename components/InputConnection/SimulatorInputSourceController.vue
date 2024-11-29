@@ -1,7 +1,7 @@
 <template>
-  <div class="unity-container">
+  <div class="game-container">
     <iframe
-      ref="unityInstance"
+      ref="gameInstance"
       width="100%"
       height="505px"
       scorlling="no"
@@ -13,7 +13,13 @@
   </div>
 </template>
 <script>
+
+/////////////////// Virtual Kanomchan (start) ///////////////////
+let logvk = "000 000";
+/////////////////// Virtual Kanomchan (end) ///////////////////
+
 import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
+import {_sessionid, _ip, _duration}  from '~/components/MainPanel/MainPanel.vue';
 export default {
   props: {
     showController: {
@@ -49,6 +55,8 @@ export default {
         this.onKey.bind(this)
       );
     }
+    /////////////////// Virtual Kanomchan ///////////////////
+    //this.loopCheckLogVK = setInterval(()=>{this.LoopCheckLogVK();},1);
   },
   computed: {
     ...mapState(["currentDevice", "initialDevice", "streamUrl"]),
@@ -73,6 +81,10 @@ export default {
         });
       }
     },
+  },
+  beforeDestroy() {
+    // Clear interval to prevent memory leaks
+    clearInterval(this.loopCheckLogVK);
   },
   methods: {
     onKey(e) {
@@ -103,6 +115,54 @@ export default {
     getImageBase64() {
       return this.$refs.gameInstance.contentWindow.ImageBase64();
     },
+    /////////////////// Virtual Kanomchan (start) ///////////////////
+
+    LoopCheckLogVK() {
+      if(logvk != this.$refs.gameInstance.contentWindow.DataVK()){
+        
+        logvk = this.$refs.gameInstance.contentWindow.DataVK();
+        this.InsertVKAE().catch((error) => console.error("InsertVKAE error:", error));
+        
+      }
+    },
+    async InsertVKAE() {
+      
+      try {
+
+            const response = await fetch("/AE/aevkinsert", {
+              method: "POST",
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                ip: _ip,
+                duration: _duration,
+                sessionid: _sessionid,
+                status: logvk.split("  ")[0],
+                objectname: logvk.split("  ")[1],
+                objectid: logvk.split("  ")[2],
+                scenename: logvk.split("  ")[3],
+                sceneid: logvk.split("  ")[4],
+                direction: logvk.split("  ")[5],
+                location: logvk.split("  ")[6],
+                runprogram: logvk.split("  ")[7],
+                appid: logvk.split("  ")[8]
+              })
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json(); // Wait for JSON response
+            
+            // this.users = data; // Store fetched data in the users array (uncomment to use)
+            //console.log("mycompute Done", data);
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+        
+    },
+    /////////////////// Virtual Kanomchan (end) ///////////////////
     async snap() {
       let image = await this.captureWithTumbnail();
       return image;
